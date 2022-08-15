@@ -454,7 +454,7 @@ rule run_espresso_q:
         maybe_compat_iso=maybe_compat_iso_param,
     resources:
         mem_mb=config['espresso_q_mem_gb'] * 1024,
-        time_hours=DEFAULT_TIME_HOURS,
+        time_hours=config['espresso_q_time_hr'],
     shell:
         '{params.conda_wrapper} perl {params.espresso_q_path}'
         ' -A {input.gtf}'
