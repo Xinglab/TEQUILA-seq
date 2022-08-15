@@ -1,0 +1,47 @@
+# Resource allocation
+guppy_threads: 20
+guppy_mem_gb: 48
+guppy_time_hr: 96
+minimap2_threads: 10
+minimap2_mem_gb: 48
+minimap2_time_hr: 48
+espresso_s_threads: 8
+espresso_s_mem_gb: 96
+espresso_s_time_hr: 60
+espresso_c_threads: 8
+espresso_c_mem_gb: 96
+espresso_c_time_hr: 120
+espresso_q_mem_gb: 96
+espresso_q_time_hr: 120
+visualize_mem_gb: 40
+# Command options
+use_annotated_junctions_with_minimap2: true
+keep_espresso_c_temp: false
+output_compatible_isoforms: true
+# Visualization options
+enable_visualization: false
+visualization_path: './visualization/'
+vis_normalize_counts: false
+vis_target_gene: ''
+vis_minimum_count: 1
+vis_descriptive_name: 'ESPRESSO'
+# Reference files
+gtf_url: ''
+gtf_name: 'gencode.v34lift37.annotation.gtf'
+fasta_url: ''
+fasta_name: 'ucsc.hg19.fasta'
+# Input samples
+# Template is shown here
+samples:
+  IMPACT_FC2_1:
+    - guppy_config: 'dna_r9.4.1_450bps_fast.cfg'      
+      fast5_dir: '~/20211207_BRCA_IMPACT_FC2_1/fast5/'
+  IMPACT_FC2_2:
+    - guppy_config: 'dna_r9.4.1_450bps_fast.cfg'      
+      fast5_dir: '~/20211207_BRCA_IMPACT_FC2_2/fast5/'
+
+
+# Executable paths
+guppy_bin_path: '/mnt/isilon/xing_lab/aspera/kutscherae/guppy/ont-guppy-cpu_4.0.15/bin/'
+conda_wrapper: './conda_wrapper'
+espresso_path: './alpha1.2.2'
