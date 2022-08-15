@@ -1,0 +1,66 @@
+# Resource allocation
+guppy_threads: 20
+guppy_mem_gb: 48
+guppy_time_hr: 96
+minimap2_threads: 10
+minimap2_mem_gb: 48
+minimap2_time_hr: 48
+espresso_s_threads: 8
+espresso_s_mem_gb: 96
+espresso_s_time_hr: 60
+espresso_c_threads: 8
+espresso_c_mem_gb: 96
+espresso_c_time_hr: 120
+espresso_q_mem_gb: 96
+visualize_mem_gb: 40
+# Command options
+use_annotated_junctions_with_minimap2: true
+keep_espresso_c_temp: false
+output_compatible_isoforms: true
+# Visualization options
+enable_visualization: false
+visualization_path: '/mnt/isilon/xuy2/program/espresso/espresso/snakemake_1.2.0_slurm_original/visualization/'
+vis_normalize_counts: false
+vis_target_gene: ''
+vis_minimum_count: 1
+vis_descriptive_name: 'ESPRESSO'
+# Reference files
+gtf_url: ''
+gtf_name: 'gencode.v34lift37.annotation.gtf'
+fasta_url: ''
+fasta_name: 'ucsc.hg19.fasta'
+# Input samples
+samples:
+  NonCapture_Ctrl_1:
+    - guppy_config: 'dna_r9.4.1_450bps_fast.cfg'
+      fast5_dir: '/mnt/isilon/xing_lab/aspera/Feng/TargetSeq/20210820_TEQUILA_BULK_10B_1/20210820_2051_X1_FAQ06439_e35d4873/fast5/'
+  NonCapture_Ctrl_2:
+    - guppy_config: 'dna_r9.4.1_450bps_fast.cfg'      
+      fast5_dir: '/mnt/isilon/xing_lab/aspera/Feng/TargetSeq/20210820_TEQUILA_BULK_10B_2/20210820_2051_X2_FAQ06472_36becc0a/fast5/'
+  NonCapture_Ctrl_3:
+    - guppy_config: 'dna_r9.4.1_450bps_fast.cfg'      
+      fast5_dir: '/mnt/isilon/xing_lab/aspera/Feng/TargetSeq/20210820_TEQUILA_BULK_10B_3/20210820_2051_X3_FAQ06401_cb07eff9/fast5/'
+  Target_IDT_1:
+    - guppy_config: 'dna_r9.4.1_450bps_fast.cfg'      
+      fast5_dir: '/mnt/isilon/xing_lab/aspera/Feng/TargetSeq/20210823_IDT_10B_1/20210823_2009_X3_FAQ06558_2dde135e/fast5/'
+  Target_IDT_2:
+    - guppy_config: 'dna_r9.4.1_450bps_fast.cfg'            
+      fast5_dir: '/mnt/isilon/xing_lab/aspera/Feng/TargetSeq/20210823_IDT_10B_2/20210823_2009_X4_FAQ06622_9b27f143/fast5/'
+  Target_IDT_3:
+    - guppy_config: 'dna_r9.4.1_450bps_fast.cfg'                  
+      fast5_dir: '/mnt/isilon/xing_lab/aspera/Feng/TargetSeq/20210823_IDT_10B_3/20210823_2009_X5_FAP82040_eb90e361/fast5/'
+  Target_TEQUILA_1:
+    - guppy_config: 'dna_r9.4.1_450bps_fast.cfg'                        
+      fast5_dir: '/mnt/isilon/xing_lab/aspera/Feng/TargetSeq/20210823_10B_SDA_1/20210823_2009_MN29373_FAQ08250_8dcb8680/fast5/'
+  Target_TEQUILA_2:
+    - guppy_config: 'dna_r9.4.1_450bps_fast.cfg'
+      fast5_dir: '/mnt/isilon/xing_lab/aspera/Feng/TargetSeq/20210823_10B_SDA_2/20210823_2010_MN18986_FAQ11705_5a984301/fast5/'
+  Target_TEQUILA_3:
+    - guppy_config: 'dna_r9.4.1_450bps_fast.cfg'      
+      fast5_dir: '/mnt/isilon/xing_lab/aspera/Feng/TargetSeq/20210823_10B_SDA_3/20210823_2011_MN29427_FAQ06816_de07f20a/fast5/'
+
+# Executable paths
+guppy_bin_path: '/mnt/isilon/xing_lab/aspera/kutscherae/guppy/ont-guppy-cpu_4.0.15/bin/'
+conda_wrapper: 'conda_wrapper'
+espresso_path: 'ESPRESSO_alpha1.2.2'
+
