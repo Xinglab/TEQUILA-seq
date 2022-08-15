@@ -28,10 +28,10 @@ And it should be noted that this pipeline will detect isoforms based on all samp
 3. Install other dependencies using conda: `./install`.
 4. Manually install following packages:
     + argparse: `conda install -c conda-forge configargparse`
-5. Download reference genome sequence and put it into the 'references' folder: https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh37_mapping/gencode.v34lift37.annotation.gtf.gz
+5. Download reference genome sequence file and put it into the 'references' folder:         https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh37_mapping/gencode.v34lift37.annotation.gtf.gz
 6. Modify some absolute file paths in [snakemake_config.yaml](snakemake_config.yaml).
-    + In this project, we mainly have three sample groups: `brain sample + SIRVset4`, `SH-SY5Y cell + SIRVset4` and 'BRCA cell lines'.
-    + Configure files of 'Brain' and 'SH-SY5Y' samples are pre-defined in the `Config_for_each_system`. When performing the analysis, the desired `snakemake_config.yaml` should be copied into main folder.
+    + In this project, we mainly have three sample groups: 'brain sample + SIRVset4', 'SH-SY5Y cell + SIRVset4' and 'BRCA cell lines'.
+    + Configure files of all sample groups are pre-defined in the `Config_for_each_system`. When performing the analysis, the desired `snakemake_config.yaml` should be copied into main folder.
     + The `visualization_path` and `conda_wrapper` of `snakemake_config.yaml` should be modified accordingly.
 
 #### Usage
