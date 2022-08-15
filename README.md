@@ -74,7 +74,7 @@ reference_files:
 
 ## Data analysis and visualization
 
-### 10 Brain genes panel
+### IMPACT genes panel on BRCA cell lines 
 Note: all commands should be run under the conda environment: 
 1. Manually install following packages:
   + R: `conda config --add channels conda-forge`
