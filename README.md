@@ -87,4 +87,9 @@ Note: all commands should be run under the conda environment:
   + numpy for python: `conda install -c anaconda numpy`
   + scales: `conda install -c r r-scales`
   + forcats: `conda install -c conda-forge r-forcats`
-
+  
+2. Generate figures for selected examples.
+  + Enter [Examples_visualization](Examples_visualization) folder.
+  + Run `sh  Examples_visualization.sh`.
+  + Check figures generated in [Example_res](./Examples_visualization/Example_res) folder.
+  
