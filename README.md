@@ -6,14 +6,13 @@ This repository contains scripts for processing and analyzing TEQUILA-seq (**T**
 
 * [Overview](#overview)
 * [Dependencies](#dependencies)
-* [Installation](#installation)
 * [Usage](#usage)
 
 ## Overview
 
 The scripts contained in this repository include those for processing TEQUILA-seq data as well as those for data visualization and analysis (see below). 
 
-Our data processing scripts work with raw Oxford Nanopore (ONT) signal data (FAST5 format) as input, and these scripts encompass the following steps:
+Our data processing scripts are designed to work with raw Oxford Nanopore (ONT) signal data (FAST5 format) as input. However, these scripts can work with data from any long-read sequencing platform (e.g., PacBio) as long as the data is provided in FASTQ/SAM/BAM format. These scripts encompass the following steps:
 1. **Basecalling**: Raw ONT signal data (FAST5 format) is basecalled into nucleotide sequences (FASTQ format) using Guppy in fast mode.
 2. **Alignment**: Basecalled reads are mapped to a user-supplied reference genome using [minimap2](https://github.com/lh3/minimap2) (Li H., *Bioinformatics* 2018) together with user-supplied reference transcript annotations.
 3. **Transcript isoform discovery and quantification**: Full-length transcript isoforms are discovered and quantified from long-read RNA-seq alignment files using [ESPRESSO](https://github.com/Xinglab/espresso).
@@ -40,97 +39,104 @@ To run our scripts, the following dependencies will need to be installed and ava
   + twoBitInfo
 * [Python](https://www.python.org/) 3.8
   + [NumPy](https://numpy.org/) (v1.20.1)
+  + [pandas](https://pandas.pydata.org/) (v1.1.4)
+  + [SciPy](https://scipy.org/) (v1.5.4)
   + [BeautifulSoup4](https://pypi.org/project/beautifulsoup4/) (v4.8.2)
+  + [ConfigArgParse](https://pypi.org/project/ConfigArgParse/)
 * [R](https://www.r-project.org/) (v4.0.5)
-* [Perl](https://www.perl.org/) (v5.26.2)
+  + [ggplot2](https://ggplot2.tidyverse.org/)
+  + [tidyverse](https://www.tidyverse.org/)
+  + [ggplotify](https://cran.r-project.org/package=ggplotify)
+  + [scales](https://scales.r-lib.org/)
+  + [forcats](https://forcats.tidyverse.org/)
+* [Perl](https://www.perl.org/) (v5.26.2) built with threading enabled
+  + Check for thread support with `perl -e 'use threads; print("ok\n")'`
 
-
-## Installation
+The source code for ESPRESSO (v1.2.2), which is another dependency, is available in the folder [ESPRESSO_alpha1.2.2](./ESPRESSO_alpha1.2.2/). For details on memory requirements (i.e., as a function of input data size and number of threads), please refer to the [ESPRESSO GitHub page](https://github.com/Xinglab/espresso).
 
 ## Usage
 
-* [Data process](#data-process)
-  + [Install](#install)
-  + [Usage](#usage)
-  + [Configuration](#configuration)
-* [Data analysis and visualization](#data-analysis-and-visualization)
+### Data processing
+
+A Snakemake workflow is provided for running the data processing scripts. The workflow can start from raw ONT signal data (FAST5 format), sequencing reads data (FASTQ format), or read-to-genome alignment data (SAM/BAM format). **Note:** A different configuration will be required depending on what type of data you are starting with. The workflow can also be configured to run multiple samples and each sample can have multiple inputs. Set the configuration by editing the [snakemake_config.yaml](./snakemake_config.yaml) and [snakemake_profile/config.yaml](./snakemake_profile/config.yaml) files. 
+
+Prior to running the data processing scripts, please make sure that [conda](https://conda.io/) is installed. Then, `./install` can be run to install all dependencies required for data processing (except Guppy, which requires a manual installation). Specifically, `./install` will create a conda environment with the required dependencies and set some absolute file paths in [snakemake_config.yaml](./snakemake_config.yaml)
+
+Details on configuring the [snakemake_config.yaml](./snakemake_config.yaml) file are as follows:
+
+* Set the amount of resources to allocate for each task as follows:
+  + `{job_name}_threads: {num_threads}`
+  + `{job_name}_mem_gb: {num_GBs}`
+  + `{job_name}_time_hr: {num_hours}`
+* Specify the path to the folder containing the ESPRESSO source code as follows:
+  + `espresso_path: /path/to/ESPRESSO/src`
+* If starting with raw ONT signal data, specify the path to the `bin` folder containing Guppy as follows:
+  + `guppy_bin_path: /path/to/guppy/bin/`
+* Specify the reference genome sequence (FASTA format) and reference transcript annotations (GTF format) to be used:
+  + You can provide download URLs for these files as follows:
+    + `gtf_url: 'protocol://url/for/some_file.gtf.gz'`
+    + `gtf_name: 'some_file.gtf'`
+    + `fasta_url: 'protocol://url/for/some_file.fasta.gz'`
+    + `fasta_name: 'some_file.fasta'`
+  + You can also place these files in the [references](./references) folder and just set the `gtf_name` and `fasta_name` fields. (Use '' for `gtf_url` and `fasta_url`)
+* For each input sample, create a corresponding config entry as follows:
+  + For samples with raw ONT signal data (FAST5 format), please provide the Guppy config file and the directory of FAST5 files as follows:
+    + `guppy_config: 'the_guppy.cfg'`
+    + `fast5_dir: '/path/to/fast5/dir'`
+  + For samples with sequencing reads data (FASTQ format), please provide the appropriate file path as follows:
+    + `fastq: '/path/to/the.fastq'`
+  + Fpr samples with read-to-genome alignment data (SAM/BAM format), please provide **one** of the following fields as appropriate:
+    + `sam: '/path/to/the.sam'`
+    + `bam: '/path/to/the.bam'`
+* Lastly, the following config values can be set to `true` or `false` as appropriate:
+  + `use_annotated_junctions_with_minimap2`: Uses splice junctions recorded in the user-provided GTF as input to `minimap2`
+  + `keep_espresso_c_temp`: Keep temporary files generated by the `C` step of `ESPRESSO`
+  + `output_compatible_isoforms`: Generate a file (named `samples_N2_R0_compatible_isoform.tsv`) that maps long read IDs to their compatible transcript isoforms
+  + `enable_visualization`: Generates files for visualizing transcript isoforms discovered by ESPRESSO. This requires setting other config values under "Visualization options" (**Note:** We recommend setting `enable_visualization` to false as we have separate scripts in this repository dedicated to generating visualizations for discovered transcript isoforms).
+
+Edit the files in the folder [snakemake_profile](./snakemake_profile) to configure how jobs should be run in a cluster environment as follows:
+* [config.yaml](./snakemake_profile/config.yaml): Sets various Snakemake parameters, such as whether jobs should be submitted to a cluster.
+* [cluster_submit.py](./snakemake_profile/cluster_submit.py): Script to submit jobs.
+* [cluster_status.py](./snakemake_profile/cluster_status.py): Script to check job status.
+* [cluster_commands.py](./snakemake_profile/cluster_commands.py): Script to run commands specific to the cluster management system being used. The default implementation is for Slurm, but other cluster environments can be used by changing this file. For example, [cluster_commands_sge.py](./snakemake_profile/cluster_commands_sge.py) can be used if working with an SGE cluster.
+
+For reference, examples of pre-configured `snakemake_config.yaml` files can be found in the folder [Config_for_each_system](./Config_for_each_system). Once the `snakemake_config.yaml` file has been appropriately configured, the Snakemake workflow can be run with `./run`
+
+Upon completion, the following files will be generated in the folder `espresso_out/work_dir`:
+* `samples_N2_R0_abundance.esp`: a tab-delimited file describing the expression levels of discovered transcript isoforms across input samples
+  + Each discovered transcript isoform is reported on a separate line.
+  + The first three columns are: `transcript_ID`, `transcript_name`, and `gene_ID`. Additional columns correspond to input samples and show the number of reads from a given sample that were counted towards each isoform.
+  + Isoform read counts are assigned by expectation maximization, such that each read contributes at most 1 count, either to a single isoform or distributed as fractional counts to multiple isoforms.
+* `samples_N2_R0_updated.gtf`: a transcript annotation file (GTF format) describing the coordinates of all discovered transcript isoforms
+  + The `source` column indicates whether each transcript is a `novel_isoform` or an `annotated_isoform`
+* `samples_N2_R0_compatible_isoform.tsv`: an optional tab-delimited file that describes compatible isoforms for each read in a given sample
+  + The columns are `read_id`, `sample_name`, `read_classification`, and `compatible_isoforms`. Possible classifications for each read under the column `read_classification` include:
+    + **Full Splice Match (FSM)**: indicates that the read carries a combination of splice junctions that is consistent with that of a known transcript
+    + **Incomplete Splice Match (ISM)**: indicates that the read carries a combination of splice junctions that is part of a known transcript
+    + **Novel In Catalog/Novel Not in Catalog (NIC/NNC)**: indicates that the read carries at least one splice junction involving a novel combination of known splice sites or novel splice sites, respectively.
+    + **Not Completely Determined (NCD)**: indicates the read carries at least one splice junction that could not be corrected by ESPRESSO
+    + **Single-exon**: indicates that the read does not carry any splice junctions
+
+The Snakemake workflow will also produce log files that are named after the rules contained in the [Snakefile](./Snakefile). Specifically, there will be `{rule_name}_log.out` and `{rule_name}_log.err` files containing the stdout and stderr, respectively, of the command run for that rule. There will also be `.cluster.out`, `.cluster.err`, and `.cluster.usage` files if a rule was submitted to the cluster using [cluster_submit.py](./snakemake_profile/cluster_submit.py).
+
+### Data visualization and analysis
+
+After data processing, we can use the following scripts to further visualize and characterize the transcript isoforms discovered from our samples. 
+
+#### Transcript isoform visualization
+
+TODO (Yang Xu)
+
+#### Detection of group-specific transcript isoforms
+
+TODO (Yang Xu)
+
+#### Detection of sample-specific transcript isoforms
 
 
-## Data process
 
-#### Install
+#### Characterization of alternative splicing events underlying discovered transcript isoforms
 
-[Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html) must be installed first. Then the detailed steps are as follows:
-
-1. Enter `TEQUILA-seq` folder.
-2. Modify `CONDA_ENV_PREFIX` paths in [set_env_vars.sh](set_env_vars.sh)
-3. Install other dependencies using conda: `./install`.
-4. Manually install following packages:
-    + argparse: `conda install -c conda-forge configargparse`
-5. Download reference genome sequence file and put it into the 'references' folder:         https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh37_mapping/gencode.v34lift37.annotation.gtf.gz
-6. Modify some absolute file paths in [snakemake_config.yaml](snakemake_config.yaml).
-    + In this project, we mainly have three sample groups: 'brain sample + SIRVset4', 'SH-SY5Y cell + SIRVset4' and 'BRCA cell lines'.
-    + Configure files of all sample groups are pre-defined in the `Config_for_each_system`. When performing the analysis, the desired `snakemake_config.yaml` should be copied into main folder.
-    + The `visualization_path` and `conda_wrapper` of `snakemake_config.yaml` should be modified accordingly.
-
-#### Usage
-
-Note: all commands should be run under the conda environment: 
-1. Modify `snakemake_config.yaml` accordingly.
-2. Submit the job with `sbatch --time=7-0:0:0 ./run` (Base-calling, alignment and isoform identification based on all samples)
-
-
-#### Configuration
-
-[snakemake_config.yaml](snakemake_config.yaml)
-* `long_read_samples`
-  + each sample has its own entry which defines the `sample_name`
-  + if starting from fast5 files then under `sample_name` set: `fast5_dir` and `guppy_config`: e.g.
-```
-    samples:
-      RNA_sample_1:
-        - guppy_config: 'dna_r9.4.1_450bps_fast.cfg'
-          fast5_dir: '~/fast5/'
-```
-  + if starting from a fastq file then under `sample_name` set: `fastq`: e.g.
-```
-    samples:
-      RNA_sample_1:
-        - fastq: '~/combined.fastq'
-```
-* `guppy_bin_path: '/path/to/guppy/bin/'` (only needed if starting from fast5 files)
-* Specify the reference files to use:
-  + Either manually put each file in `references/` or provide a url to download the (potentially gzipped) file:
-  + `gtf_name: 'file_name.gtf'`
-  + `gff3_name: 'file_name.gff3'`
-  + `fasta_name: 'file_name.fasta'`
-* `conda_wrapper:`: based on current folder
-* `espresso_path:`: based on current folder
-```
-reference_files:
-  file_name.gtf.gz:
-    url: 'protocol://url/for/file_name.gtf.gz'
-```
-
-
-## Data analysis and visualization
-
-### IMPACT genes panel on BRCA cell lines 
-Note: all commands should be run under the conda environment: 
-1. Manually install following packages:
-  + R: `conda config --add channels conda-forge`
-  + `conda config --set channel_priority strict`
-  + `conda create -n r_plot r-essentials r-base=4.0.5`
-  + `conda activate r_plot`
-  + ggplot2: `conda install -c r r-ggplot2`
-  + tidyverse: `conda install -c r r-tidyverse`
-  + ggplotify: `conda install -c conda-forge r-ggplotify`
-  + numpy for python: `conda install -c anaconda numpy`
-  + scales: `conda install -c r r-scales`
-  + forcats: `conda install -c conda-forge r-forcats`
+#### Prediction of NMD-targeted transcript isoforms
   
-2. Generate figures for selected examples.
-  + Enter [Examples_visualization](Examples_visualization) folder.
-  + Run `sh  Examples_visualization.sh`.
-  + Check figures generated in [Example_res](./Examples_visualization/Example_res) folder.
-  
+TODO (Yang Xu)
