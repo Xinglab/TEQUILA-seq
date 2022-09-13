@@ -182,6 +182,9 @@ Our script will generate a tsv file summarizing all transcript isoforms prioriti
 #### Characterization of alternative splicing events underlying discovered transcript isoforms
 
 We wrote a script, [FindAltTSEvents.py](./scripts/FindAltTSEvents.py), that can enumerate all transcript structure differences between any given pair of transcript isoforms. These differences in transcript structure can then be classified into the following seven simple categories:
+
+<img src="./files/AS_Patterns_Basic_2018_AJHG.jpg" width="800"/>
+
 * Exon skipping (SE)
 * Alternative 5'-splice site usage (A5SS)
 * Alternative 3'-splice site usage (A3SS)
