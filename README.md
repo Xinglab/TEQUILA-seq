@@ -17,7 +17,9 @@ This repository contains scripts for processing and analyzing TEQUILA-seq (**T**
 
 ## Overview
 
-The scripts contained in this repository include those for processing TEQUILA-seq data as well as those for data visualization and analysis (see below). 
+The scripts contained in this repository include those for processing TEQUILA-seq data as well as those for data visualization and analysis.
+
+<img src="./files/TEQUILA-seq_Analysis_Workflow.png" width="800"/>
 
 Our data processing scripts are designed to work with raw Oxford Nanopore (ONT) signal data (FAST5 format) as input. However, these scripts can work with data from any long-read sequencing platform (e.g., PacBio) as long as the data is provided in FASTQ/SAM/BAM format. These scripts encompass the following steps:
 1. **Basecalling**: Raw ONT signal data (FAST5 format) is basecalled into nucleotide sequences (FASTQ format) using Guppy in fast mode.
