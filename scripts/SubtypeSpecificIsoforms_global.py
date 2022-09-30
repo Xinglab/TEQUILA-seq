@@ -19,7 +19,7 @@ from collections import defaultdict
 
 
 ID2name_dict = defaultdict()
-with open('/home/xuy2/scratch/snakemake_1.2.2_Target_1115_BRCA_IMPACT_mix_test_batch3_rescue_FC1_8_final/Target_IMPACT_gene_list_onco_suppre.txt','r') as gene_type_inf:
+with open('../files/Target_IMPACT_gene_list_onco_suppre.txt','r') as gene_type_inf:
     for index,line in enumerate(gene_type_inf):
         if index == 0: continue
         arr = line.strip().split('\t')
