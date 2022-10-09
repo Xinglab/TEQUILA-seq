@@ -141,13 +141,13 @@ TODO (Yang Xu)
 #### Detection of subtype-specific transcript isoforms
 
 We have developed a script, [SubtypeSpecificIsoforms.py](./scripts/SubtypeSpecificIsoforms.py) that identify transcript isoforms with enriched usage in samples in given subtype relative to the samples from other subtypes within tumor. Briefly, our script uses the following approach to detect transcript isoforms with subtype-specific usage:
-1. For each transcript identified by ESPRESSO, run a two-sided student-t test (FDR < user-specified threshold & delta_PSI >= user-specified threshold) between each subtype group and the corresponding background group (samples from the rest of subtypes) to identify isoform that has a significantly higher proportion in the given subtype group.
+1. For each transcript identified by ESPRESSO, run a two-sided student-t test (FDR < user-specified threshold & Isoform proportion change (delta_proportion) >= user-specified threshold) between each subtype group and the corresponding background group (samples from the rest of subtypes) to identify isoform that has a significantly higher proportion in the given subtype group.
 
 Our script can be run as follows:
 
 ```
 python SubtypeSpecificIsoforms.py [-h] -i /path/to/isoform/proportion/matrix -a /path/to/sample-subtype_match_table -t <number of worker threads> \
-    -c <FDR threshold> -d <deltaPSI threshold> -o /path/to/output/file
+    -c <FDR threshold> -d <delta_proportion threshold> -o /path/to/output/file
 
 script arguments:
     -h, --help                                          show this message and exit
@@ -159,7 +159,7 @@ script arguments:
     -c <FDR threshold>                                  FDR threshold for calling transcript isoforms as subtype-specific 
                                                         (float between 0 and 1)
 
-    -d <deltaPSI threshold>                             Isoform proportion change threshold (float between 0 and 100(%))
+    -d <delta_proportion threshold>                     isoform proportion change threshold (float between 0 and 100(%))
 
     -a /path/to/sample-subtype_match_table              sample-subtype match table
 
@@ -167,7 +167,7 @@ script arguments:
                                                         isoforms prioritized as being subtype-specific
 ```
 
-Our script will generate a tsv file summarizing all transcript isoforms prioritized as being subtype-specific at the specified FDR threshold and deltaPSI threshold. Each line of the tsv file has the following output fields:
+Our script will generate a tsv file summarizing all transcript isoforms prioritized as being subtype-specific at the specified FDR threshold and isoform proportion change threshold. Each line of the tsv file has the following output fields:
 
 * **Field 1**: Gene symbol corresponding to gene of a subtype-specific isoform
 * **Field 2**: Transcript ID of the subtype-specific isoform
