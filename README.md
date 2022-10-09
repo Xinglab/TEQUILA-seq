@@ -257,18 +257,22 @@ Our script will subsequently generate a tab-delimited file consisting of four fi
 
 #### Prediction of NMD-targeted transcript isoforms
   
-To determine NMD-targeted transcript, we firstly obtain open reading frame (ORF) for each identified transcript, either by adopting the annotated ORF for those annotated protein-coding transcripts with 'basic' tag (based on Gencode annotation) or adopting its longest ORF as the predicted ORF for others.
+To determine NMD-targeted transcript, we firstly obtain open reading frame (ORF) for each identified transcript, either by adopting the annotated ORF for those annotated protein-coding transcripts with 'basic' tag (based on GENCODE annotation) or adopting its longest ORF as the predicted ORF for others.
 For each transcript with predicted ORF, we determined it to contain a premature stop codon (PTC) and as the NMD-target transcript if: (i) it was longer than >= 200nts, (ii) it contained at least two exons and (iii) the last stop codon resided >=50nts upstream of the last exon-exon junction [Lindeboom, 2017, PMC5045715]. 
 
-To run [Translation.py](./scripts/Translation_scripts/Translation.py), the genome sequence file and the corresponding Gencode annotation file should be downloaded and move to [files](./scripts/Translation_scripts/files/) folder.
-If GRCH37/hg19 is the expected genome version, we recommend [Genome fasta file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh37_mapping/GRCh37.primary_assembly.genome.fa.gz) and [Gencode annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh37_mapping/gencode.v34lift37.annotation.gtf.gz).
-If GRCH38/hg38 is the expected genome version, we recommend [Genome fasta file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/GRCh38.p13.genome.fa.gz) and [Gencode annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/gencode.v39.annotation.gtf.gz).
+To run [Translation.py](./scripts/Translation_scripts/Translation.py), the genome sequence file and the corresponding GENCODE annotation file should be downloaded and move to [files](./scripts/Translation_scripts/files/) folder.
+
+If GRCH37/hg19 is the expected genome version, we recommend this [Genome fasta file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh37_mapping/GRCh37.primary_assembly.genome.fa.gz) and this [GENCODE annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh37_mapping/gencode.v34lift37.annotation.gtf.gz).
+
+If GRCH38/hg38 is the expected genome version, we recommend this [Genome fasta file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/GRCh38.p13.genome.fa.gz) and this [GENCODE annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/gencode.v39.annotation.gtf.gz).
 
 
 Our script can be run as follows:
 
 ```
-python Translation.py [-h] --mode long-read --trans_gtf /path/to/ESPRESSO/isoform/generated/gtf --abundance_inf /path/to/ESPRESSO/isoform/abundance/matrix --genome_version GRCH37/GRCH38 --ref_gtf /path/to/corresponding/Gencode/annotation --out_dir /path/to/output/directory --out_file /prefix/name/of/output/file
+python Translation.py [-h] --mode long-read --trans_gtf /path/to/ESPRESSO/isoform/generated/gtf \
+ --abundance_inf /path/to/ESPRESSO/isoform/abundance/matrix --genome_version GRCH37/GRCH38 \
+ --ref_gtf /path/to/corresponding/GENCODE/annotation --out_dir /path/to/output/directory --out_file /prefix/name/of/output/file
 
 script arguments:
     -h, --help                                          show this message and exit
@@ -282,7 +286,7 @@ script arguments:
 
     --genome_version                                    genome sequence version, GRCH37/GRCH38
 
-    --ref_gtf                                           corresponding Gencode annotation file
+    --ref_gtf                                           corresponding GENCODE annotation file
 
     --out_dir                                           path to output directory
 
