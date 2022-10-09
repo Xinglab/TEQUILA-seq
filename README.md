@@ -293,4 +293,4 @@ script arguments:
     --out_file                                          prefix of the output file  
 ```
 
-Our script will generate protein fasta files for protein-coding transcripts (3_[out_file]_rename_PC.fasta) and NMD-targeted transcripts (3_[out_file]_rename_NMD.fasta) as the results.
+Our script will generate protein fasta files for both protein-coding transcripts and NMD-targeted transcripts as the results.
