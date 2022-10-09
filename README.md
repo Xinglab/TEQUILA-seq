@@ -136,7 +136,11 @@ After data processing, we can use the following scripts to further visualize and
 
 #### Transcript isoform visualization
 
-TODO (Yang Xu)
+To visualize the isoform among given samples, our script can be run as follows (take TP53 as an example): 
+1. Enter [scripts](./scripts/) folder.
+2. Run [Examples_visualization.sh](./scripts/Examples_visualization.sh).
+3. Check the result figures generated in [Examples_res](./scripts/Examples_res/).
+
 
 #### Detection of subtype-specific transcript isoforms
 
