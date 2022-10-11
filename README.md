@@ -140,7 +140,7 @@ To visualize the isoform among given samples, the GENCODE annotation file is req
 
 If GRCH37/hg19 is the expected genome version, we recommend this [GENCODE annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh37_mapping/gencode.v34lift37.annotation.gtf.gz). And if GRCH38/hg38 is the expected genome version, we recommend this [GENCODE annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/gencode.v39.annotation.gtf.gz).
 
-our script can be run as follows (take TP53 as an example): 
+Our script can be run as follows (take TP53 as an example): 
 1. Enter [scripts](./scripts/) folder.
 2. Run [Examples_visualization.sh](./scripts/Examples_visualization.sh).
 3. Check the result figures generated in [Example_res](./scripts/Example_res/).
