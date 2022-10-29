@@ -1,6 +1,6 @@
 # TEQUILA-seq: Data Analysis Software
 
-This repository contains scripts for processing and analyzing TEQUILA-seq (**T**ranscript **E**nrichment and **Q**uantification **U**tilizing **I**sothermally **L**inear-**A**mplified probes in conjunction with long-read **seq**uencing) data.
+This repository contains scripts for processing and analyzing TEQUILA-seq data.
 
 ## Table of Contents
 
