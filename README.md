@@ -17,7 +17,7 @@ This repository contains scripts for processing and analyzing TEQUILA-seq data.
 
 ## Overview
 
-The scripts contained in this repository include those for processing TEQUILA-seq data as well as those for data visualization and analysis.
+The scripts contained in this repository include those for processing TEQUILA-seq data as well as those for data visualization and analysis. The main files for processing TEQUILA-seq data are in [scripts/](scripts/). [ESPRESSO_alpha1.2.2/](ESPRESSO_alpha1.2.2) and the snakemake code are from a developement version of https://github.com/Xinglab/espresso
 
 <img src="./files/TEQUILA-seq_Analysis_Workflow.png" width="800"/>
 
@@ -148,8 +148,8 @@ Our script can be run as follows (take DNMT3B and TP53 as examples):
 
 #### Detection of subtype-specific transcript isoforms
 
-We have developed a script, [SubtypeSpecificIsoforms.py](./scripts/SubtypeSpecificIsoforms.py) that identify transcript isoforms with enriched usage in samples in given subtype relative to the samples from other subtypes within tumor. Briefly, our script uses the following approach to detect transcript isoforms with subtype-specific usage:
-1. For each transcript identified by ESPRESSO, run a two-sided student-t test (FDR < user-specified threshold & Isoform proportion change (delta_proportion) >= user-specified threshold) between each subtype group and the corresponding background group (samples from the rest of subtypes) to identify isoform that has a significantly higher proportion in the given subtype group.
+We have developed a script, [SubtypeSpecificIsoforms.py](./scripts/SubtypeSpecificIsoforms.py) that identifies transcript isoforms with enriched usage in samples in the given subtype relative to the samples from other subtypes within tumor. Briefly, our script uses the following approach to detect transcript isoforms with subtype-specific usage:
+1. For each transcript identified by ESPRESSO, run a two-sided student-t test (FDR < user-specified threshold & Isoform proportion change (delta_proportion) >= user-specified threshold) between each subtype group and the corresponding background group (samples from the rest of subtypes) to identify an isoform that has a significantly higher proportion in the given subtype group.
 
 Our script can be run as follows:
 
@@ -189,8 +189,8 @@ Our script will generate a tsv file summarizing all transcript isoforms prioriti
 
 #### Detection of sample-specific transcript isoforms
 
-We have developed a script, [SampleSpecificIsoforms.py](./scripts/SampleSpecificIsoforms.py) that identify transcript isoforms with enriched usage in a single sample relative to a collection of samples processed by ESPRESSO. Briefly, our script uses the following approach to detect transcript isoforms with sample-specific usage:
-1. For each gene, generate an m-by-n contigency table comprised of read counts (rounded to the nearest integer) for m identified isoforms across n samples:
+We have developed a script, [SampleSpecificIsoforms.py](./scripts/SampleSpecificIsoforms.py) that identifies transcript isoforms with enriched usage in a single sample relative to a collection of samples processed by ESPRESSO. Briefly, our script uses the following approach to detect transcript isoforms with sample-specific usage:
+1. For each gene, generate an m-by-n contingency table comprised of read counts (rounded to the nearest integer) for m identified isoforms across n samples:
 2. Run a chi-square test of homogeneity (FDR < user-specified threshold) on the contingency table to identify genes in which isoform proportions are not homogeneous across the considered samples.
 3. For genes prioritized by the chi-square test with FDR < user-specified threshold, run a post-hoc one-tailed binomial test (FDR < user-specified threshold) to identify sample-isoform pairs in which the isoform proportion in the given sample is significantly higher than the global isoform proportion taken across all samples.
 
@@ -266,7 +266,7 @@ Our script will subsequently generate a tab-delimited file consisting of four fi
 #### Prediction of NMD-targeted transcript isoforms
   
 To determine NMD-targeted transcript, we firstly obtain open reading frame (ORF) for each identified transcript, either by adopting the annotated ORF for those annotated protein-coding transcripts with 'basic' tag (based on GENCODE annotation) or adopting its longest ORF as the predicted ORF for others.
-For each transcript with predicted ORF, we determined it to contain a premature stop codon (PTC) and as the NMD-target transcript if: (i) it was longer than >= 200nts, (ii) it contained at least two exons and (iii) the last stop codon resided >=50nts upstream of the last exon-exon junction [Lindeboom, 2017, PMC5045715]. 
+For each transcript with predicted ORF, we determined it to contain a premature termination codon (PTC) and as the NMD-target transcript if: (i) it was longer than >= 200nts, (ii) it contained at least two exons and (iii) the last stop codon resided >=50nts upstream of the last exon-exon junction [Lindeboom, 2017, PMC5045715]. 
 
 To run [Translation.py](./scripts/Translation_scripts/Translation.py), the genome sequence file and the corresponding GENCODE annotation file should be downloaded and moved to [files](./scripts/Translation_scripts/files/) folder.
 

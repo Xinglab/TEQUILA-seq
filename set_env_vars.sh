@@ -9,7 +9,7 @@ function set_conda_env_prefix() {
 
   cd "${ORIG_DIR}" || return 1
 
-  CONDA_ENV_PREFIX="/home/xuy2/xuy2/program/espresso/espresso/snakemake_1.2.0_original/conda_env"
+  CONDA_ENV_PREFIX="${SCRIPT_DIR}/conda_env"
 }
 
 function main() {

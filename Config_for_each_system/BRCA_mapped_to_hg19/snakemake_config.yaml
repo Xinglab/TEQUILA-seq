@@ -42,6 +42,6 @@ samples:
 
 
 # Executable paths
-guppy_bin_path: '/mnt/isilon/xing_lab/aspera/kutscherae/guppy/ont-guppy-cpu_4.0.15/bin/'
+guppy_bin_path: '/path/to/guppy/bin/'
 conda_wrapper: './conda_wrapper'
 espresso_path: './alpha1.2.2'
