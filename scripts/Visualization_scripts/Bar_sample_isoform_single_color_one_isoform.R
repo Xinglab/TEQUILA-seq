@@ -43,11 +43,11 @@ sub_color <- as.vector(trans_data$Subtype_color)
 
 
 ### sort isoforms ####
-uniprot_inf_name = '../Translation_scripts/files/Gencode_v39_canonical_isoform.txt'
+uniprot_inf_name = './Translation_scripts/files/Gencode_v39_canonical_isoform.txt'
 uniprot_inf <- read.table(uniprot_inf_name, header = T,sep='\t')
 canonical_trans <- as.character(uniprot_inf[uniprot_inf$GeneSymbol==target_gene_name, 3])
 
-basic_inf_name = '../Translation_scripts/files/gencode.v34lift37.annotation_basic_trans.txt'
+basic_inf_name = './Translation_scripts/files/gencode.v34lift37.annotation_basic_trans.txt'
 basic_inf <- read.table(basic_inf_name, header = T,sep='\t')
 basic_trans <- as.character(basic_inf[basic_inf$Gene_name==target_gene_name, 2])
 
