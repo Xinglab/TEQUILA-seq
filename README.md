@@ -1,43 +1,45 @@
 # TEQUILA-seq: Data Analysis Software
 
-This repository contains scripts for processing and analyzing TEQUILA-seq data.
+The scripts contained in this repository were used for processing, analyzing, and visualizing TEQUILA-seq data.
 
 ## Table of Contents
 
-* [Overview](#overview)
-* [Dependencies](#dependencies)
-* [Usage](#usage)
-  + [Data processing](#data-processing)
-  + [Data visualization and analysis](#data-visualization-and-analysis)
-    + [Transcript isoform visualization](#transcript-isoform-visualization)
-    + [Detection of subtype-specific transcript isoforms](#detection-of-subtype-specific-transcript-isoforms)
-    + [Detection of sample-specific transcript isoforms](#detection-of-sample-specific-transcript-isoforms)
-    + [Characterization of alternative splicing events underlying discovered transcript isoforms](#characterization-of-alternative-splicing-events-underlying-discovered-transcript-isoforms)
-    + [Prediction of NMD-targeted transcript isoforms](#prediction-of-nmd-targeted-transcript-isoforms)
+- [TEQUILA-seq: Data Analysis Software](#tequila-seq-data-analysis-software)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Dependencies](#dependencies)
+  - [Usage](#usage)
+    - [Data processing](#data-processing)
+    - [Data visualization and analysis](#data-visualization-and-analysis)
+      - [Transcript isoform visualization](#transcript-isoform-visualization)
+      - [Identification of tumor subtype-associated transcript isoforms](#identification-of-tumor-subtype-associated-transcript-isoforms)
+      - [Identification of tumor aberrant transcript isoforms](#identification-of-tumor-aberrant-transcript-isoforms)
+      - [Classification of alternative splicing events underlying discovered transcript isoforms](#classification-of-alternative-splicing-events-underlying-discovered-transcript-isoforms)
+      - [Identification of NMD-targeted transcript isoforms](#identification-of-nmd-targeted-transcript-isoforms)
 
 ## Overview
 
-The scripts contained in this repository include those for processing TEQUILA-seq data as well as those for data visualization and analysis.
+The scripts contained in this repository were used for processing, analyzing, and visualizing TEQUILA-seq data.
 
 <img src="./files/TEQUILA-seq_Analysis_Workflow.png" width="800"/>
 
-Our data processing scripts are designed to work with raw Oxford Nanopore (ONT) signal data (FAST5 format) as input. However, these scripts can work with data from any long-read sequencing platform (e.g., PacBio) as long as the data is provided in FASTQ/SAM/BAM format. These scripts encompass the following steps:
-1. **Basecalling**: Raw ONT signal data (FAST5 format) is basecalled into nucleotide sequences (FASTQ format) using Guppy in fast mode.
+Our data processing scripts are designed to work with raw nanopore data (FAST5 format) as input. However, these scripts can work with data from any long-read sequencing platform (e.g., PacBio) as long as the data is provided in FASTQ/SAM/BAM format. These scripts encompass the following steps:
+1. **Basecalling**: Raw nanopore data (FAST5 format) is basecalled into nucleotide sequences (FASTQ format) using Guppy in fast mode.
 2. **Alignment**: Basecalled reads are mapped to a user-supplied reference genome using [minimap2](https://github.com/lh3/minimap2) (Li H., *Bioinformatics* 2018) together with user-supplied reference transcript annotations.
-3. **Transcript isoform discovery and quantification**: Full-length transcript isoforms are discovered and quantified from long-read RNA-seq alignment files using [ESPRESSO](https://github.com/Xinglab/espresso).
+3. **Transcript isoform discovery and quantification**: Full-length transcript isoforms are discovered and quantified from long-read alignment files using [ESPRESSO](https://github.com/Xinglab/espresso).
 
-We also have scripts designed to visualize and further characterize transcript isoforms identified from TEQUILA-seq data. These scripts can perform the following tasks:
-1. **Visualize discovered transcript isoforms**: Given a collection of samples subjected to TEQUILA-seq, we can visualize the structures and relative abundances of all transcript isoforms discovered for a given gene.
-2. **Detect group-specific and sample-specific transcript isoforms**: For a collection of samples subjected to TEQUILA-seq, if the samples can be partitioned into different groups, we can identify transcript isoforms with group-specific expression and usage. Similarly, we can also identify transcript isoforms with sample-specific expression and usage.
-3. **Characterize alternative splicing events underlying discovered transcript isoforms**: Local differences in transcript structure between a given isoform and the canonical isoform of the corresponding gene are classified into different alternative splicing patterns, including exon skipping, alternative 5' and 3' splice sites, mutually exclusive exons, retained introns, alternative first or last exons, and complex splicing. 
-4. **Predict NMD-targeted transcript isoforms**: Transcript isoforms targeted by mRNA nonsense-mediated decay (NMD) are predicted from the set of isoforms discovered from TEQUILA-seq data based on the 50 nt rule.
+We also wrote scripts for visualizing and analyzing transcript isoforms discovered from TEQUILA-seq data. These scripts were designed to perform the following tasks:
+1. **Visualize discovered transcript isoforms**: Given a collection of samples subjected to TEQUILA-seq, visualize the structures and relative abundances of all transcript isoforms discovered for a given gene.
+2. **Identify tumor subtype-associated and tumor aberrant transcript isoforms**: Using TEQUILA-seq data generated on a panel of 40 breast cancer cell lines ((2 replicates for each of the 40 breast cancer cell lines), each representing 4 distinct intrinsic subtypes (luminal, HER2 enriched, basal A, basal B), identify transcript isoforms with significantly elevated proportions in cell lines belonging to a given subtype versus all other cell lines (i.e., tumor subtype-associated transcript isoforms). For the same dataset, identify transcript isoforms with significantly elevated proportions in at least one but no more than 4 breast cancer cell lines (i.e., tumor aberrant transcript isoforms).  
+3. **Classify alternative splicing events underlying discovered transcript isoforms**: Local differences in transcript structure between a given transcript isoform and the canonical transcript isoform of the corresponding gene are classified into different alternative splicing categories, including exon skipping, alternative 5' splice site, alternative 3' splice site, mutually exclusive exons, intron retention, alternative first exon, alternative last exon, and complex splicing. 
+4. **Identify NMD-targeted transcript isoforms**: Transcript isoforms targeted by nonsense-mediated mRNA decay (NMD) are identified from the set of transcript isoforms discovered from TEQUILA-seq data based on multiple layers of criteria (e.g., transcript length, number of splice junctions, the 50 nt rule). 
 
 ## Dependencies
 
 To run our scripts, the following dependencies will need to be installed and available on `$PATH`:
 
 * [Snakemake](https://snakemake.readthedocs.io) (v5.31.1) 
-* Guppy (must be downloaded manually from the [ONT software download page](https://community.nanoporetech.com/downloads) since a login is required
+* Guppy (must be downloaded manually from the [ONT software download page](https://community.nanoporetech.com/downloads) since a login is required)
 * [minimap2](https://github.com/lh3/minimap2) (v2.17)
 * [SAMtools](http://samtools.sourceforge.net) (v1.9)
 * [BLAST](https://www.ncbi.nlm.nih.gov/blast/) (v2.10.1)
@@ -69,7 +71,7 @@ The source code for ESPRESSO (v1.2.2), which is another dependency, is available
 
 ### Data processing
 
-A Snakemake workflow is provided for running the data processing scripts. The workflow can start from raw ONT signal data (FAST5 format), sequencing reads data (FASTQ format), or read-to-genome alignment data (SAM/BAM format). **Note:** A different configuration will be required depending on what type of data you are starting with. The workflow can also be configured to run multiple samples and each sample can have multiple inputs. Set the configuration by editing the [snakemake_config.yaml](./snakemake_config.yaml) and [snakemake_profile/config.yaml](./snakemake_profile/config.yaml) files. 
+A Snakemake workflow is provided for running the data processing scripts. The workflow can start from raw nanopore data (FAST5 format), sequencing reads data (FASTQ format), or long-read alignment data (SAM/BAM format). **Note:** A different configuration will be required depending on what type of data you are starting with. The workflow can also be configured to run multiple samples and each sample can have multiple inputs. Set the configuration by editing the [snakemake_config.yaml](./snakemake_config.yaml) and [snakemake_profile/config.yaml](./snakemake_profile/config.yaml) files. 
 
 Prior to running the data processing scripts, please make sure that [conda](https://conda.io/) is installed. Then, `./install` can be run to install all dependencies required for data processing (except Guppy, which requires a manual installation). Specifically, `./install` will create a conda environment with the required dependencies and set some absolute file paths in [snakemake_config.yaml](./snakemake_config.yaml)
 
@@ -81,7 +83,7 @@ Details on configuring the [snakemake_config.yaml](./snakemake_config.yaml) file
   + `{job_name}_time_hr: {num_hours}`
 * Specify the path to the folder containing the ESPRESSO source code as follows:
   + `espresso_path: /path/to/ESPRESSO/src`
-* If starting with raw ONT signal data, specify the path to the `bin` folder containing Guppy as follows:
+* If starting with raw nanopore data, specify the path to the `bin` folder containing Guppy as follows:
   + `guppy_bin_path: /path/to/guppy/bin/`
 * Specify the reference genome sequence (FASTA format) and reference transcript annotations (GTF format) to be used:
   + You can provide download URLs for these files as follows:
@@ -91,12 +93,12 @@ Details on configuring the [snakemake_config.yaml](./snakemake_config.yaml) file
     + `fasta_name: 'some_file.fasta'`
   + You can also place these files in the [references](./references) folder and just set the `gtf_name` and `fasta_name` fields. (Use '' for `gtf_url` and `fasta_url`)
 * For each input sample, create a corresponding config entry as follows:
-  + For samples with raw ONT signal data (FAST5 format), please provide the Guppy config file and the directory of FAST5 files as follows:
+  + For samples with raw nanopore data (FAST5 format), please provide the Guppy config file and the directory of FAST5 files as follows:
     + `guppy_config: 'the_guppy.cfg'`
     + `fast5_dir: '/path/to/fast5/dir'`
   + For samples with sequencing reads data (FASTQ format), please provide the appropriate file path as follows:
     + `fastq: '/path/to/the.fastq'`
-  + Fpr samples with read-to-genome alignment data (SAM/BAM format), please provide **one** of the following fields as appropriate:
+  + Fpr samples with long-read alignment data (SAM/BAM format), please provide **one** of the following fields as appropriate:
     + `sam: '/path/to/the.sam'`
     + `bam: '/path/to/the.bam'`
 * Lastly, the following config values can be set to `true` or `false` as appropriate:
@@ -116,14 +118,14 @@ For reference, examples of pre-configured `snakemake_config.yaml` files can be f
 Upon completion, the following files will be generated in the folder `espresso_out/work_dir`:
 * `samples_N2_R0_abundance.esp`: a tab-delimited file describing the expression levels of discovered transcript isoforms across input samples
   + Each discovered transcript isoform is reported on a separate line.
-  + The first three columns are: `transcript_ID`, `transcript_name`, and `gene_ID`. Additional columns correspond to input samples and show the number of reads from a given sample that were counted towards each isoform.
-  + Isoform read counts are assigned by expectation maximization, such that each read contributes at most 1 count, either to a single isoform or distributed as fractional counts to multiple isoforms.
+  + The first three columns are: `transcript_ID`, `transcript_name`, and `gene_ID`. Additional columns correspond to input samples and show the number of reads from a given sample that were counted towards each transcript isoform.
+  + Transcript isoform read counts are assigned by expectation maximization, such that each read contributes at most 1 count, either to a single transcript isoform or distributed as fractional counts to multiple transcript isoforms.
 * `samples_N2_R0_updated.gtf`: a transcript annotation file (GTF format) describing the coordinates of all discovered transcript isoforms
-  + The `source` column indicates whether each transcript is a `novel_isoform` or an `annotated_isoform`
-* `samples_N2_R0_compatible_isoform.tsv`: an optional tab-delimited file that describes compatible isoforms for each read in a given sample
+  + The `source` column indicates whether each transcript isoform is a `novel_isoform` or an `annotated_isoform`
+* `samples_N2_R0_compatible_isoform.tsv`: an optional tab-delimited file that describes compatible transcript isoforms for each read in a given sample
   + The columns are `read_id`, `sample_name`, `read_classification`, and `compatible_isoforms`. Possible classifications for each read under the column `read_classification` include:
-    + **Full Splice Match (FSM)**: indicates that the read carries a combination of splice junctions that is consistent with that of a known transcript
-    + **Incomplete Splice Match (ISM)**: indicates that the read carries a combination of splice junctions that is part of a known transcript
+    + **Full Splice Match (FSM)**: indicates that the read carries a combination of splice junctions that is consistent with that of a known transcript isoform
+    + **Incomplete Splice Match (ISM)**: indicates that the read carries a combination of splice junctions that is part of a known transcript isoform
     + **Novel In Catalog/Novel Not in Catalog (NIC/NNC)**: indicates that the read carries at least one splice junction involving a novel combination of known splice sites or novel splice sites, respectively.
     + **Not Completely Determined (NCD)**: indicates the read carries at least one splice junction that could not be corrected by ESPRESSO
     + **Single-exon**: indicates that the read does not carry any splice junctions
@@ -132,26 +134,76 @@ The Snakemake workflow will also produce log files that are named after the rule
 
 ### Data visualization and analysis
 
-After data processing, we can use the following scripts to further visualize and characterize the transcript isoforms discovered from our samples. 
+After data processing, we used the following scripts to visualize and analyze the transcript isoforms discovered from our samples. 
 
 #### Transcript isoform visualization
 
-To visualize the isoform among given samples, the GENCODE annotation file is required, which should be downloaded and moved to [files](./scripts/Translation_scripts/files/) folder.
+**PLEASE FIX AND REVIEW**
 
-If GRCH37/hg19 is the expected genome version, we recommend this [GENCODE annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh37_mapping/gencode.v34lift37.annotation.gtf.gz). And if GRCH38/hg38 is the expected genome version, we recommend this [GENCODE annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/gencode.v39.annotation.gtf.gz).
+We wrote a script, [Generate_bar_structure_figure_example.py](./scripts/Generate_bar_structure_figure_example.py), that can generate the following types of plots:
+1. Stacked barplots showing (a) estimated abundances and (b) isoform proportions of transcript isoforms discovered for a user-specified gene from a collection of samples subjected to TEQUILA-seq
+2. Diagrams showing the structures of transcript isoforms discovered for a user-specified gene from a collection of samples subjected to TEQUILA-seq
 
-Our script can be run as follows (take DNMT3B and TP53 as examples): 
-1. Enter [scripts](./scripts/) folder.
-2. Run [Examples_visualization.sh](./scripts/Examples_visualization.sh).
-3. Check the result figures generated in [Example_res](./scripts/Example_res/).
+Our visualization script requires a file containing reference transcript annotations (GTF format), and this file should be placed in the [files](./scripts/Translation_scripts/files/) folder. If you are using the GRCh37/hg19 reference genome build, we recommend downloading and using this [transcript annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh37_mapping/gencode.v34lift37.annotation.gtf.gz). Alternatively, if you are using the GRCh38/hg38 reference genome build, we recommend downloading and using this [transcript annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/gencode.v39.annotation.gtf.gz).
 
+Detailed usage information for our script is shown below:
 
-#### Detection of subtype-specific transcript isoforms
+```
+# PLEASE FILL IN
+- Be sure to describe HOW to generate any of the required input files (assuming that these input files are NOT directly produced by ESPRESSO)
+```
 
-We have developed a script, [SubtypeSpecificIsoforms.py](./scripts/SubtypeSpecificIsoforms.py) that identify transcript isoforms with enriched usage in samples in given subtype relative to the samples from other subtypes within tumor. Briefly, our script uses the following approach to detect transcript isoforms with subtype-specific usage:
-1. For each transcript identified by ESPRESSO, run a two-sided student-t test (FDR < user-specified threshold & Isoform proportion change (delta_proportion) >= user-specified threshold) between each subtype group and the corresponding background group (samples from the rest of subtypes) to identify isoform that has a significantly higher proportion in the given subtype group.
+To demonstrate how to run our visualization script, we have provided a test dataset in the folder [Example_res](./scripts/Example_res/). The files in this folder include:
 
-Our script can be run as follows:
+```
+# PLEASE FILL IN
+- What is the file "samples_N2_R0_abundance_CPM_target_genes.esp"?
+- What is the file "samples_N2_R0_abundance_proportion_target_genes_reshaped_merge_others.txt"?
+- What is the file "samples_N2_R0_abundance_CPM_target_genes_reshaped_merge_others.txt"?
+- What is the file "samples_BedGraph.bed"?
+```
+
+For example, we can use the following commands to visualize (a) transcript isoforms of *TP53* and (b) transcript isoforms of *DNMT3B* that were discovered from TEQUILA-seq data generated on our panel of 40 breast cancer cell lines (2 replicates for each of the 40 breast cancer cell lines):
+
+```
+# Visualize transcript isoforms of TP53
+python ./Generate_bar_structure_figure_example.py --gene ENSG00000141510 --gene_name TP53 --transcript ESPRESSO:chr17:1864:802 \
+  --abundance_CPM_original ./Example_res/samples_N2_R0_abundance_CPM_target_genes.esp --name_col 4 \
+  --abundance_proportion ./Example_res/samples_N2_R0_abundance_proportion_target_genes_reshaped_merge_others.txt \
+  --abundance_CPM ./Example_res/samples_N2_R0_abundance_CPM_target_genes_reshaped_merge_others.txt \
+  --bedgraph ./Example_res/samples_BedGraph.bed --out_dir ./Example_res --order yes
+
+# Visualize transcript isoforms of DNMT3B
+python ./Generate_bar_structure_figure_example.py --gene ENSG00000088305 --gene_name DNMT3B --transcript ENST00000348286 \
+  --abundance_CPM_original ./Example_res/samples_N2_R0_abundance_CPM_target_genes.esp --name_col 4 \
+  --abundance_proportion ./Example_res/samples_N2_R0_abundance_proportion_target_genes_reshaped_merge_others.txt \
+  --abundance_CPM ./Example_res/samples_N2_R0_abundance_CPM_target_genes_reshaped_merge_others.txt \
+  --bedgraph ./Example_res/samples_BedGraph.bed --out_dir ./Example_res --order yes
+```
+
+These commands are contained in a Bash wrapper script [Examples_visualization.sh](./scripts/Examples_visualization.sh), which can be executed as follows:
+1. Enter the [scripts](./scripts/) folder.
+2. Run the following command: `bash Examples_visualization.sh`
+
+Plots generated by our script (in PDF format) can be found in the folder [Example_res](./scripts/Example_res/).
+
+#### Identification of tumor subtype-associated transcript isoforms
+
+**PLEASE FIX AND REVIEW**
+
+We wrote a script, [SubtypeSpecificIsoforms.py](./scripts/SubtypeSpecificIsoforms.py), to identify tumor subtype-associated transcript isoforms from TEQUILA-seq data generated on our panel of 40 breast cancer cell lines (2 replicates for each of the 40 breast cancer cell lines), each representing 4 distinct intrinsic subtypes (luminal, HER2 enriched, basal A, basal B). Tumor subtype-associated transcript isoforms have significantly elevated proportions in cell lines belonging to a given subtype versus all other cell lines. Our script uses the following approach to identify tumor subtype-associated transcript isoforms:
+* For each subtype, run a two-sided Student's *t*-test to compare the proportion of a transcript isoform between cell lines belonging to the given subtype and all other cell lines.
+* Filter for transcript isoforms meeting the following criteria:
+  * FDR-adjusted *p*-value from two-sided Student's *t*-test is $\leq$ a user-defined threshold
+  * The difference between the mean transcript isoform proportion across cell lines of the given subtype and the mean transcript isoform proportion over all other cell lines is $\geq$ a user-defined threshold
+
+```
+TODO:
+- Explain how to generate an "isoform proportion matrix".
+- What is a "sample-subtype match table"? At the very least, describe the contents of this table and show a snippet of what this table might look like. 
+```
+
+Detailed usage information for our script is shown below:
 
 ```
 python SubtypeSpecificIsoforms.py [-h] -i /path/to/isoform/proportion/matrix -a /path/to/sample-subtype_match_table -t <number of worker threads> \
@@ -162,39 +214,40 @@ script arguments:
 
     -i /path/to/isoform_proportion_matrix               processed isoform proportion matrix
 
-    -t <number of worker threads>                       number of worker threads (integer)
-
-    -c <FDR threshold>                                  FDR threshold for calling transcript isoforms as subtype-specific 
-                                                        (float between 0 and 1)
-
-    -d <delta_proportion threshold>                     isoform proportion change threshold (float between 0 and 100(%))
-
     -a /path/to/sample-subtype_match_table              sample-subtype match table
 
+    -t <number of worker threads>                       number of worker threads (integer)
+
+    -c <FDR threshold>                                  FDR threshold for calling transcript isoforms as tumor subtype-associated
+                                                        (float between 0 and 1)
+
+    -d <delta_proportion threshold>                     threshold on the percentage difference between the mean transcript isoform proportion across cell lines 
+                                                        of a given subtype and the mean transcript isoform proportion over all other cell lines 
+                                                        (float between 0 and 100)
+
     -o /path/to/output/file                             path to tsv file generated by script summarizing all transcript
-                                                        isoforms prioritized as being subtype-specific
+                                                        isoforms prioritized as being tumor subtype-associated
 ```
 
-Our script will generate a tsv file summarizing all transcript isoforms prioritized as being subtype-specific at the specified FDR threshold and isoform proportion change threshold. Each line of the tsv file has the following output fields:
+Our script will generate a tsv file summarizing all transcript isoforms prioritized as being tumor subtype-associated based on user-specified thresholds. Each line of the tsv file has the following output fields:
 
-* **Field 1**: Gene symbol corresponding to gene of a subtype-specific isoform
-* **Field 2**: Transcript ID of the subtype-specific isoform
-* **Field 3**: Gene ID corresponding to gene of a subtype-specific isoform
-* **Field 4**: Subtype pairs that have been tested
-* **Field 5**: Average isoform proportion in correspoding subtype group
-* **Field 6**: Raw p-value for subtype-specificity
-* **Field 7**: FDR-adjusted p-value for subtype-specificity
-* **Field 8**: Status of whether it is identified as significant
+* **Field 1**: Gene symbol corresponding to the gene of a tumor subtype-associated transcript isoform
+* **Field 2**: Transcript ID of the tumor subtype-associated transcript isoform
+* **Field 3**: Gene ID corresponding to the gene of a tumor subtype-associated transcript isoform
+* **Field 4**: Tumor subtype corresponding to the tumor subtype-associated transcript isoform
+* **Field 5**: Average transcript isoform proportion across cell lines of the specified tumor subtype
+* **Field 6**: Raw *p*-value for tumor subtype-association
+* **Field 7**: FDR-adjusted *p*-value for tumor subtype-association
+* **Field 8**: Indicator for whether the transcript isoform is tumor subtype-associated
 
+#### Identification of tumor aberrant transcript isoforms
 
-#### Detection of sample-specific transcript isoforms
-
-We have developed a script, [SampleSpecificIsoforms.py](./scripts/SampleSpecificIsoforms.py) that identify transcript isoforms with enriched usage in a single sample relative to a collection of samples processed by ESPRESSO. Briefly, our script uses the following approach to detect transcript isoforms with sample-specific usage:
-1. For each gene, generate an m-by-n contigency table comprised of read counts (rounded to the nearest integer) for m identified isoforms across n samples:
-2. Run a chi-square test of homogeneity (FDR < user-specified threshold) on the contingency table to identify genes in which isoform proportions are not homogeneous across the considered samples.
-3. For genes prioritized by the chi-square test with FDR < user-specified threshold, run a post-hoc one-tailed binomial test (FDR < user-specified threshold) to identify sample-isoform pairs in which the isoform proportion in the given sample is significantly higher than the global isoform proportion taken across all samples.
-
-Our script can be run as follows:
+We wrote a script, [SampleSpecificIsoforms.py](./scripts/SampleSpecificIsoforms.py), to identify transcript isoforms that are present at significantly elevated proportions in a single cell line replicate based on TEQUILA-seq data generated on our panel of 40 breast cancer cell lines (2 replicates for each of the 40 breast cancer cell lines) (hereafter referred to as "sample-specific" transcript isoforms). Briefly, our script uses the following approach to identify sample-specific transcript isoforms:
+1. For each gene, generate an m-by-80 matrix comprised of read counts (rounded to the nearest integer) for m discovered transcript isoforms across 80 TEQUILA-seq samples (2 replicates for each of the 40 breast cancer cell lines).
+2. Run a chi-square test of homogeneity (FDR $\lt$ user-specified threshold) on the matrix to assess whether transcript isoform proportions for the given gene are homogenous across all samples.
+3. Focusing on genes identified by the chi-square test as having an FDR-adjusted *p*-value $\lt$ the user-specified threshold, run a post-hoc one-tailed binomial test (FDR $\;t$ user-specified threshold) to identify sample-isoform pairs in which the transcript isoform proportion in the given sample is significantly higher than the overall transcript isoform proportion over all samples (i.e., sum of read counts of the transcript isoform over all samples divided by the sum of read counts of the gene over all samples)
+  
+Detailed usage information for our script is shown below:
 
 ```
 python SampleSpecificIsoforms.py [-h] -i /path/to/ESPRESSO/isoform/abundance/matrix -t <number of worker threads> \
@@ -203,7 +256,7 @@ python SampleSpecificIsoforms.py [-h] -i /path/to/ESPRESSO/isoform/abundance/mat
 script arguments:
     -h, --help                                          show this message and exit
 
-    -i /path/to/ESPRESSO/isoform/abundance/matrix       path to tsv file generated by ESPRESSO summarizing all detected transcript 
+    -i /path/to/ESPRESSO/isoform/abundance/matrix       path to tsv file generated by ESPRESSO summarizing all discovered transcript 
                                                         isoforms across samples and their assigned read counts
 
     -t <number of worker threads>                       number of worker threads (integer)
@@ -217,32 +270,40 @@ script arguments:
 
 Our script will generate a tsv file summarizing all transcript isoforms prioritized as being sample-specific at the specified FDR threshold. Each line of the tsv file has the following output fields:
 
-* **Field 1**: Gene ID corresponding to gene of a sample-specific isoform
-* **Field 2**: Transcript ID of the sample-specific isoform
+* **Field 1**: Gene ID corresponding to the gene of a sample-specific transcript isoform
+* **Field 2**: Transcript ID of the sample-specific transcript isoform
 * **Field 3**: Name of the corresponding sample
-* **Field 4**: Read counts assigned by ESPRESSO to sample-specific isoform in given sample
-* **Field 5**: Global isoform proportion (sum of read counts of the isoform over all samples divided by the sum of read counts for all isoforms across all samples)
-* **Field 6**: Isoform proportion in the given sample
-* **Field 7**: Raw p-value for sample-specificity
-* **Field 8**: FDR-adjusted p-value for sample-specificity
+* **Field 4**: Read counts assigned by ESPRESSO to the sample-specific transcript isoform in the given sample
+* **Field 5**: Overall transcript isoform proportion
+* **Field 6**: Transcript isoform proportion in the given sample
+* **Field 7**: Raw *p*-value for sample-specificity
+* **Field 8**: FDR-adjusted *p*-value for sample-specificity
 
-#### Characterization of alternative splicing events underlying discovered transcript isoforms
+To identify tumor aberrant transcript isoforms, we took the set of sample-specific transcript isoforms reported by our script and first identified cell line-isoform pairs for which the transcript isoform showed significantly elevated usage in a given cell line. Specifically, these pairs are required to meet the following criteria:
+* The transcript isoform has an FDR-adjusted *p*-value $\lt$ 1% (post-hoc test) for both replicates of the given cell line
+* The transcript isoform proportions in both replicates are $\geq$ 10% higher than the overall transcript isoform proportion over all samples. 
 
-We wrote a script, [FindAltTSEvents.py](./scripts/FindAltTSEvents.py), that can enumerate all transcript structure differences between any given pair of transcript isoforms. These differences in transcript structure can then be classified into the following seven simple categories:
+Finally, tumor aberrant transcript isoforms are identified based on the following criteria:
+1. The transcript isoform shows significantly elevated usage in at least 1 but no more than 4 cell lines (i.e., $\leq$ 10% of our breast cancer cell line panel)
+2. The transcript isoform is not the canonical transcript isoform of the corresponding gene, as defined by the [Ensembl database (Release 100, April 2020)](http://apr2020.archive.ensembl.org/index.html). 
+
+#### Classification of alternative splicing events underlying discovered transcript isoforms
+
+We wrote a script, [FindAltTSEvents.py](./scripts/FindAltTSEvents.py), that compares the structures of two transcript isoforms. Local differences in transcript structure are then classified into 7 basic alternative splicing categories:
 
 <img src="./files/AS_Patterns_Basic_2018_AJHG.jpg" width="800"/>
 
 * Exon skipping (SE)
-* Alternative 5'-splice site usage (A5SS)
-* Alternative 3'-splice site usage (A3SS)
+* Alternative 5'-splice site (A5SS)
+* Alternative 3'-splice site (A3SS)
 * Mutually exclusive exons (MXE)
 * Intron retention (RI)
-* Alternative first exon usage (AFE)
-* Alternative last exon usage (ALE)
+* Alternative first exon (AFE)
+* Alternative last exon (ALE)
 
-Any alternative transcript structure event that fails to fall into any of the seven categories listed above will, by default, be classified as complex (COMPLEX). **Note:** It is possible to have combinations of alternative transcript structure events for any given pair of transcript isoforms.
+Any local differences in transcript structure that could not be classified as one of the 7 basic alternative splicing categories were classified as "complex" (COMPLEX). **Note:** It is possible to have combinations of alternative splicing events for any given pair of transcript isoforms.
 
-Our script can be run as follows:
+Detailed usage information for our script is shown below:
 
 ```
 python FindAltTSEvents.py [-h] -i /path/to/input/GTF -o /path/to/output/file
@@ -250,7 +311,7 @@ python FindAltTSEvents.py [-h] -i /path/to/input/GTF -o /path/to/output/file
 script arguments:
     -h, --help                                          show this message and exit
 
-    -i /path/to/input/GTF                               path to GTF file describing structures of two transcript isoforms
+    -i /path/to/input/GTF                               path to GTF file containing transcript-level and exon-level coordinates for two transcript isoforms
 
     -o /path/to/output/file                             path to output file
 ```
@@ -258,47 +319,49 @@ script arguments:
 Our script will subsequently generate a tab-delimited file consisting of four fields:
 * **Field 1**: ID for transcript isoform 1
 * **Field 2**: ID for transcript isoform 2
-* **Field 3**: Identified alternative transcript structure event
-* **Field 4**: Genomic coordinates for alternative transcript structure event.
+* **Field 3**: Identified alternative splicing events
+* **Field 4**: Genomic coordinates for alternative splicing event
 
-**Note:** The designation for transcript isoforms 1 and 2 is completely arbitrary. Moreover, if the two transcript isoforms contained in the input GTF file exhibit a combination of multiple alternative transcript structure events, each event will be reported as its own line in the output file.
+**Note:** Designation of transcript isoforms 1 and 2 is completely arbitrary. Moreover, if the two transcript isoforms contained in the input GTF file exhibit a combination of multiple alternative splicing events, each event will be reported as its own line in the output file.
 
-#### Prediction of NMD-targeted transcript isoforms
-  
-To determine NMD-targeted transcript, we firstly obtain open reading frame (ORF) for each identified transcript, either by adopting the annotated ORF for those annotated protein-coding transcripts with 'basic' tag (based on GENCODE annotation) or adopting its longest ORF as the predicted ORF for others.
-For each transcript with predicted ORF, we determined it to contain a premature stop codon (PTC) and as the NMD-target transcript if: (i) it was longer than >= 200nts, (ii) it contained at least two exons and (iii) the last stop codon resided >=50nts upstream of the last exon-exon junction [Lindeboom, 2017, PMC5045715]. 
+#### Identification of NMD-targeted transcript isoforms
 
-To run [Translation.py](./scripts/Translation_scripts/Translation.py), the genome sequence file and the corresponding GENCODE annotation file should be downloaded and moved to [files](./scripts/Translation_scripts/files/) folder.
+**PLEASE REVIEW**
 
-If GRCH37/hg19 is the expected genome version, we recommend this [Genome fasta file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh37_mapping/GRCh37.primary_assembly.genome.fa.gz) and this [GENCODE annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh37_mapping/gencode.v34lift37.annotation.gtf.gz).
+To identify NMD-targeted transcript isoforms, we first retrieved the sequences of discovered transcript isoforms (from a user-supplied reference genome) and searched for open reading frames (ORFs). For discovered transcript isoforms that are annotated as 'basic' protein-coding in GENCODE annotations, we used the annotated ORF. Alternatively, for other transcript isoforms, we used the longest ORF and required it to encode at least 20 amino acids. Among transcripts with predicted ORFs, we identified those that may be NMD-targeted using the following criteria (adapted from the following [paper](https://www.nature.com/articles/ng.3664)):
+1. The transcript is $\geq$ 200 nt long
+2. The transcript contains at least one splice junction
+3. **The 50 nt rule:** The predicted stop codon is $\geq$ 50 nt upstream of the last splice junction (i.e., the transcript harbors a premature termination codon, PTC).
 
-If GRCH38/hg38 is the expected genome version, we recommend this [Genome fasta file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/GRCh38.p13.genome.fa.gz) and this [GENCODE annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/gencode.v39.annotation.gtf.gz).
+We wrote a script, [Translation.py](./scripts/Translation_scripts/Translation.py), that searches for ORFs from an input file of transcript annotations (GTF). Our script requires (i) a reference genome (FASTA) and (ii) reference transcript annotations (GTF), and these files should be placed in the [files](./scripts/Translation_scripts/files/) folder prior to running our script. If you are using the GRCh37/hg19 reference genome build, we recommend using [this reference genome file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh37_mapping/GRCh37.primary_assembly.genome.fa.gz) and [this transcript annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh37_mapping/gencode.v34lift37.annotation.gtf.gz). Alternatively, if you are using the GRCh38/hg38 reference genome build, we recommend using [this reference genome file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/GRCh38.p13.genome.fa.gz) and [this transcript annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/gencode.v39.annotation.gtf.gz). 
 
-
-Our script can be run as follows:
+Detailed usage information for our script is shown below:
 
 ```
 python Translation.py [-h] --mode long-read --trans_gtf /path/to/ESPRESSO/isoform/generated/gtf \
- --abundance_inf /path/to/ESPRESSO/isoform/abundance/matrix --genome_version GRCH37/GRCH38 \
- --ref_gtf /path/to/corresponding/GENCODE/annotation --out_dir /path/to/output/directory --out_file /prefix/name/of/output/file
+  --abundance_inf /path/to/ESPRESSO/isoform/abundance/matrix --genome_version GRCH37/GRCH38 \
+  --ref_gtf /path/to/corresponding/GENCODE/annotation --out_dir /path/to/output/directory --out_file /prefix/name/of/output/file
 
 script arguments:
     -h, --help                                          show this message and exit
 
-    --mode                                              long-read/short-read data, please input 'long-read' here
+    --mode                                              "long-read" or "short-read" depending on input files
+                                                        (use "long-read" here)
 
-    --abundance_inf                                     path to tsv file generated by ESPRESSO summarizing all detected transcript 
+    --abundance_inf                                     path to tsv file generated by ESPRESSO summarizing all discovered transcript 
                                                         isoforms across samples and their assigned read counts
 
-    --trans_gtf                                         path to gtf file generated by ESPRESSO summarizing all detected transcript isoforms                                                 
+    --trans_gtf                                         path to gtf file generated by ESPRESSO summarizing coordinates of all discovered 
+                                                        transcript isoforms                                                 
 
-    --genome_version                                    genome sequence version, GRCH37/GRCH38
+    --genome_version                                    human reference genome build
+                                                        ("GRCH37" or "GRCH38")
 
-    --ref_gtf                                           corresponding GENCODE annotation file
+    --ref_gtf                                           path to gtf file containing reference transcript annotations
 
     --out_dir                                           path to output directory
 
-    --out_file                                          prefix of the output file  
+    --out_file                                          prefix of output files
 ```
 
-Our script will generate protein fasta files for both protein-coding transcripts and NMD-targeted transcripts as the results.
+Our script will generate protein FASTA files for both protein-coding transcript isoforms and NMD-targeted transcript isoforms in the user-specified output directory.
