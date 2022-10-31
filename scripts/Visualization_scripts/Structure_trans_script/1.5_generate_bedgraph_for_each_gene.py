@@ -130,7 +130,8 @@ for line in bed_inf:
 bed_inf.close()
 
 ##### get bed from annotated gtf #####
-anno_gtf_inf_name = '../../Translation_scripts/files/Gencode_converted_all_exon_annotation_v39.txt'
+this_dir = os.path.dirname(os.path.realpath(__file__))
+anno_gtf_inf_name = this_dir+'/../../Translation_scripts/files/Gencode_converted_all_exon_annotation_v39.txt'
 with open(anno_gtf_inf_name, 'r') as anno_gtf:
 	for line in anno_gtf:
 		arr = line.strip().split('\t')

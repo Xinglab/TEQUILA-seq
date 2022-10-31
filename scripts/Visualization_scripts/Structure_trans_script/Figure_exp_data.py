@@ -68,7 +68,8 @@ for each_trans in trans_list:
 
 ##### undetected anno isoforms #####
 tag_dict = defaultdict()
-with open('../../Translation_scripts/files/gencode.v34lift37.annotation.gtf','r') as gencode_gtf:
+this_dir = os.path.dirname(os.path.realpath(__file__))
+with open(this_dir+'/../../Translation_scripts/files/gencode.v34lift37.annotation.gtf','r') as gencode_gtf:
 	for line in gencode_gtf:
 		if line.startswith('#'): continue
 		arr = line.strip().split('\t')
