@@ -60,7 +60,7 @@ samples:
       fast5_dir: '/mnt/isilon/xing_lab/aspera/Feng/TargetSeq/20210823_10B_SDA_3/20210823_2011_MN29427_FAQ06816_de07f20a/fast5/'
 
 # Executable paths
-guppy_bin_path: '/mnt/isilon/xing_lab/aspera/kutscherae/guppy/ont-guppy-cpu_4.0.15/bin/'
+guppy_bin_path: '/path/to/guppy/ont-guppy-cpu_4.0.15/bin/'
 conda_wrapper: 'conda_wrapper'
 espresso_path: 'ESPRESSO_alpha1.2.2'
 
