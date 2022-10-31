@@ -30,7 +30,7 @@ outf_name = object_path+'/BedGraph_TargetGene_'+target_gene_ID+'.sh'
 outf = open(outf_name,'w')
 dire_path = '/'.join(os.path.abspath(__file__).split('/')[0:-1])
 
-for each_sample in sample_list:
+for each_sample in sample_list: #Only the first sample is used here, but it doesn't affect the result
 	cmd = 'python '+dire_path+'/1.5_generate_bedgraph_for_each_gene.py '+each_sample+' '+target_gene_ID+' '+CPM_inf_name+' '+CPM_cut_off+' '+object_path+' '+sample_bedgraph+'\n'
 	outf.write(cmd)
 	cmd_2 = 'ls --color=never '+object_path+'/target_genes/*'+target_gene_ID+'*.bed > '+object_path+'/Figure_'+target_gene_ID+'_bed_list.txt\n'
