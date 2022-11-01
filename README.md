@@ -19,7 +19,7 @@ The scripts contained in this repository were used for processing, analyzing, an
 
 ## Overview
 
-The scripts contained in this repository were used for processing, analyzing, and visualizing TEQUILA-seq data. The main files for processing TEQUILA-seq data are in [scripts/](scripts/). [ESPRESSO_alpha1.2.2/](ESPRESSO_alpha1.2.2) and the snakemake code are from a developement version of https://github.com/Xinglab/espresso.
+The scripts contained in this repository were used for processing, analyzing, and visualizing TEQUILA-seq data. The main files for processing TEQUILA-seq data are in [scripts](./scripts). [ESPRESSO_alpha1.2.2](ESPRESSO_alpha1.2.2) and the snakemake code are from a developement version of https://github.com/Xinglab/espresso.
 
 <img src="./files/TEQUILA-seq_Analysis_Workflow.png" width="800"/>
 
@@ -138,29 +138,19 @@ After data processing, we used the following scripts to visualize and analyze th
 
 #### Transcript isoform visualization
 
-**PLEASE FIX AND REVIEW**
-
 We wrote a script, [Generate_bar_structure_figure_example.py](./scripts/Generate_bar_structure_figure_example.py), that can generate the following types of plots:
 1. Stacked barplots showing (a) estimated abundances and (b) isoform proportions of transcript isoforms discovered for a user-specified gene from a collection of samples subjected to TEQUILA-seq
 2. Diagrams showing the structures of transcript isoforms discovered for a user-specified gene from a collection of samples subjected to TEQUILA-seq
 
 Our visualization script requires a file containing reference transcript annotations (GTF format), and this file should be placed in the [files](./scripts/Translation_scripts/files/) folder. If you are using the GRCh37/hg19 reference genome build, we recommend downloading and using this [transcript annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh37_mapping/gencode.v34lift37.annotation.gtf.gz). Alternatively, if you are using the GRCh38/hg38 reference genome build, we recommend downloading and using this [transcript annotation file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/gencode.v39.annotation.gtf.gz).
 
-Detailed usage information for our script is shown below:
-
-```
-# PLEASE FILL IN
-- Be sure to describe HOW to generate any of the required input files (assuming that these input files are NOT directly produced by ESPRESSO)
-```
-
 To demonstrate how to run our visualization script, we have provided a test dataset in the folder [Example_res](./scripts/Example_res/). The files in this folder include:
 
 ```
-# PLEASE FILL IN
-- What is the file "samples_N2_R0_abundance_CPM_target_genes.esp"?
-- What is the file "samples_N2_R0_abundance_proportion_target_genes_reshaped_merge_others.txt"?
-- What is the file "samples_N2_R0_abundance_CPM_target_genes_reshaped_merge_others.txt"?
-- What is the file "samples_BedGraph.bed"?
+samples_BedGraph.bed:                                                                     A BED format file processed from ESPRESSO output (samples_N2_R0_updated.gtf), and it contains the exon coordinate information for each identified transcript in samples.
+samples_N2_R0_abundance_CPM_target_genes.esp:                                             A matrix processed from ESPRESSO output (samples_N2_R0_abundance.esp), and it contains normalized expression value (counts per million or CPM) for each identified transcript from target genes in samples.
+samples_N2_R0_abundance_proportion_target_genes_reshaped_merge_others.txt:                A reshaped tab-delimited file, each row represents the proportion of a transcript in a sample, only the transcripts with the top 5 (if $\geq$ 5 transcript are identified in given gene) highest average proportion are displayed, the rest transcripts and their correspoding proportion are collapsed into 'Others' item for given gene.
+samples_N2_R0_abundance_CPM_target_genes_reshaped_merge_others.txt:                       A reshaped tab-delimited file, each row represents the CPM value of a transcript in a sample, only the transcripts with the top 5 (if $\geq$ 5 transcript are identified in given gene) highest average proportion are displayed, the rest transcripts and their correspoding CPM valus are collapsed into 'Others' item for given gene.  
 ```
 
 For example, we can use the following commands to visualize (a) transcript isoforms of *TP53* and (b) transcript isoforms of *DNMT3B* that were discovered from TEQUILA-seq data generated on our panel of 40 breast cancer cell lines (2 replicates for each of the 40 breast cancer cell lines):
@@ -221,7 +211,9 @@ script arguments:
     -o /path/to/output/file                             path to output tsv file summarizing all transcript
                                                         isoforms prioritized as being tumor subtype-associated
 ```
-In which, the `Isoform_proportion_matrix` is the matrix where the column represents each input sample and the row represents ths proportion of each transcript isoform. The proportion of a transcript isoform was calculated by dividing the counts per million (CPM) value of that transcript isoform by the CPM value of the corresponding gene (i.e., sum of CPM values over all transcript isoforms discovered for the gene). Please refer to [samples_N2_R0_abundance_proportion_target_genes.txt](./scripts/Example_res/samples_N2_R0_abundance_proportion_target_genes.txt) as an example. And the `sample-subtype_match_table` is a tab-delimited file containing the subtype information for each input cell line, please refer [BRCA_cell_lines.txt](./files/BRCA_cell_lines.txt) to as an example.
+In which, the `Isoform_proportion_matrix` is the matrix where the column represents each input sample and the row represents ths proportion of each transcript isoform. The proportion of a transcript isoform was calculated by dividing the counts per million (CPM) value of that transcript isoform by the CPM value of the corresponding gene (i.e., sum of CPM values over all transcript isoforms discovered for the gene). Please refer to [samples_N2_R0_abundance_proportion_target_genes.txt](./scripts/Example_res/samples_N2_R0_abundance_proportion_target_genes.txt) as an example. 
+
+And the `sample-subtype_match_table` is a tab-delimited file containing the subtype information for each input cell line, please refer [BRCA_cell_lines.txt](./files/BRCA_cell_lines.txt) to as an example.
 
 Our script will generate a tsv file summarizing all transcript isoforms prioritized as being tumor subtype-associated based on user-specified thresholds. Each line of the tsv file has the following output fields:
 
