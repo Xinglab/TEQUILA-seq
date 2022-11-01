@@ -151,13 +151,12 @@ samples_BedGraph.bed:                                                           
                                                                                           and it contains the exon coordinate information for each identified transcript in samples.
 
 samples_N2_R0_abundance_CPM_target_genes.esp:                                             A matrix processed from ESPRESSO output (samples_N2_R0_abundance.esp), 
-                                                                                          and it contains normalized expression value (counts per million or CPM)
-                                                                                          for each identified transcript from target genes in samples.
+                                                                                          and it contains normalized expression value (counts per million or CPM) for each identified transcript from target genes in samples.
 
 samples_N2_R0_abundance_proportion_target_genes_reshaped_merge_others.txt:                A reshaped tab-delimited file, each row represents the proportion of a transcript in a sample, 
                                                                                           only the transcripts with the top 5 (if ≥ 5 transcript are identified in given gene) highest average proportion are displayed, 
                                                                                           the rest transcripts and their correspoding proportion are collapsed into 'Others' item for given gene.
-                                                                                          
+
 samples_N2_R0_abundance_CPM_target_genes_reshaped_merge_others.txt:                       A reshaped tab-delimited file, each row represents the CPM value of a transcript in a sample, 
                                                                                           only the transcripts with the top 5 (if ≥ 5 transcript are identified in given gene) highest average proportion are displayed, 
                                                                                           the rest transcripts and their correspoding CPM valus are collapsed into 'Others' item for given gene.  
@@ -221,7 +220,7 @@ script arguments:
     -o /path/to/output/file                             path to output tsv file summarizing all transcript
                                                         isoforms prioritized as being tumor subtype-associated
 ```
-In which, the `Isoform_proportion_matrix` is the matrix where the column represents each input sample and the row represents ths proportion of each transcript isoform. The proportion of a transcript isoform was calculated by dividing the counts per million (CPM) value of that transcript isoform by the CPM value of the corresponding gene (i.e., sum of CPM values over all transcript isoforms discovered for the gene). Please refer to [samples_N2_R0_abundance_proportion_target_genes.txt](./scripts/Example_res/samples_N2_R0_abundance_proportion_target_genes.txt) as an example. 
+In which, the `Isoform_proportion_matrix` is the matrix where the column represents each input sample and the row represents ths proportion of each transcript isoform. The proportion of a transcript isoform was calculated by dividing the CPM value of that transcript isoform by the CPM value of the corresponding gene (i.e., sum of CPM values over all transcript isoforms discovered for the gene). Please refer to [samples_N2_R0_abundance_proportion_target_genes.txt](./scripts/Example_res/samples_N2_R0_abundance_proportion_target_genes.txt) as an example. 
 
 And the `sample-subtype_match_table` is a tab-delimited file containing the subtype information for each input cell line, please refer [BRCA_cell_lines.txt](./files/BRCA_cell_lines.txt) to as an example.
 
