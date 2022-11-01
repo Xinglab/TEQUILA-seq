@@ -170,7 +170,7 @@ To demonstrate how to run our visualization script, we have provided a test data
     * CPM of the transcript isoform in the given input sample
     * Tumor subtype associated with the given input sample
     * Hexadecimal color code associated with the tumor subtype
-  * The top five transcript isoforms of a given target gene with the highest average CPM across all samples are represented individually, while remaining transcript isoforms are grouped together into an "Others" category.  
+  * The top five transcript isoforms of a given target gene with the highest average transcript isoform proportion across all samples are represented individually, while remaining transcript isoforms are grouped together into an "Others" category (to match the isoforms shown in the **samples_N2_R0_abundance_proportion_target_genes_reshaped_merge_others.txt** file).  
 
 Given a target gene of interest, as well as a transcript isoform of interest, we can run our script `Generate_bar_structure_figure_example.py` as follows:
 
