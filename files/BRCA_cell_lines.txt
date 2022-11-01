@@ -39,8 +39,3 @@ FC37	MDA-MB-134-VI	Luminal
 FC38	T47D	Luminal
 FC39	UACC-812	Luminal
 FC40	ZR-75-1	Luminal
-FC41	184B5	Non-tumorigenic
-FC42	Hs-578Bst	Non-tumorigenic
-FC43	MCF-10A	Non-tumorigenic
-FC44	MCF-10F	Non-tumorigenic
-FC45	MCF-12A	Non-tumorigenic
