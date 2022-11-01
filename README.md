@@ -99,7 +99,7 @@ Details on configuring the [snakemake_config.yaml](./snakemake_config.yaml) file
     + `fast5_dir: '/path/to/fast5/dir'`
   + For samples with sequencing reads data (FASTQ format), please provide the appropriate file path as follows:
     + `fastq: '/path/to/the.fastq'`
-  + Fpr samples with long-read alignment data (SAM/BAM format), please provide **one** of the following fields as appropriate:
+  + For samples with long-read alignment data (SAM/BAM format), please provide **one** of the following fields as appropriate:
     + `sam: '/path/to/the.sam'`
     + `bam: '/path/to/the.bam'`
 * Lastly, the following config values can be set to `true` or `false` as appropriate:
