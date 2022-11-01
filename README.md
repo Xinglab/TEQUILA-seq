@@ -19,9 +19,7 @@ The scripts contained in this repository were used for processing, analyzing, an
 
 ## Overview
 
-The scripts contained in this repository were used for processing, analyzing, and visualizing TEQUILA-seq data. The main files for processing TEQUILA-seq data are in [scripts](./scripts). 
-
-[ESPRESSO_alpha1.2.2](ESPRESSO_alpha1.2.2) and the snakemake code are from a developement version of https://github.com/Xinglab/espresso.
+The scripts contained in this repository were used for processing, analyzing, and visualizing TEQUILA-seq data. The main files for processing TEQUILA-seq data are in [scripts](./scripts), [ESPRESSO_alpha1.2.2](ESPRESSO_alpha1.2.2) and the snakemake code are from a developement version of https://github.com/Xinglab/espresso.
 
 <img src="./files/TEQUILA-seq_Analysis_Workflow.png" width="800"/>
 
@@ -151,12 +149,15 @@ To demonstrate how to run our visualization script, we have provided a test data
 ```
 samples_BedGraph.bed:                                                                     A BED format file processed from ESPRESSO output (samples_N2_R0_updated.gtf), 
                                                                                           and it contains the exon coordinate information for each identified transcript in samples.
+
 samples_N2_R0_abundance_CPM_target_genes.esp:                                             A matrix processed from ESPRESSO output (samples_N2_R0_abundance.esp), 
                                                                                           and it contains normalized expression value (counts per million or CPM)
                                                                                           for each identified transcript from target genes in samples.
+
 samples_N2_R0_abundance_proportion_target_genes_reshaped_merge_others.txt:                A reshaped tab-delimited file, each row represents the proportion of a transcript in a sample, 
                                                                                           only the transcripts with the top 5 (if ≥ 5 transcript are identified in given gene) highest average proportion are displayed, 
                                                                                           the rest transcripts and their correspoding proportion are collapsed into 'Others' item for given gene.
+                                                                                          
 samples_N2_R0_abundance_CPM_target_genes_reshaped_merge_others.txt:                       A reshaped tab-delimited file, each row represents the CPM value of a transcript in a sample, 
                                                                                           only the transcripts with the top 5 (if ≥ 5 transcript are identified in given gene) highest average proportion are displayed, 
                                                                                           the rest transcripts and their correspoding CPM valus are collapsed into 'Others' item for given gene.  
