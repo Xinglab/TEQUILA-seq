@@ -147,19 +147,19 @@ Our visualization script requires a file containing reference transcript annotat
 To demonstrate how to run our visualization script, we have provided a test dataset in the folder [Example_res](./scripts/Example_res/). The files in this folder include:
 
 ```
-samples_BedGraph.bed:                                                                     A BED format file processed from ESPRESSO output (samples_N2_R0_updated.gtf), 
-                                                                                          and it contains the exon coordinate information for each identified transcript in samples.
+samples_BedGraph.bed:                                                           A BED format file processed from ESPRESSO output (samples_N2_R0_updated.gtf), 
+                                                                                and it contains the exon coordinate information for each identified transcript in samples.
 
-samples_N2_R0_abundance_CPM_target_genes.esp:                                             A matrix processed from ESPRESSO output (samples_N2_R0_abundance.esp), 
-                                                                                          and it contains normalized expression value (counts per million or CPM) for each identified transcript from target genes in samples.
+samples_N2_R0_abundance_CPM_target_genes.esp:                                   A matrix processed from ESPRESSO output (samples_N2_R0_abundance.esp), 
+                                                                                and it contains normalized expression value (counts per million or CPM) for each identified transcript from target genes in samples.
 
-samples_N2_R0_abundance_proportion_target_genes_reshaped_merge_others.txt:                A reshaped tab-delimited file, each row represents the proportion of a transcript in a sample, 
-                                                                                          only the transcripts with the top 5 (if ≥ 5 transcript are identified in given gene) highest average proportion are displayed, 
-                                                                                          the rest transcripts and their correspoding proportion are collapsed into 'Others' item for given gene.
+samples_N2_R0_abundance_proportion_target_genes_reshaped_merge_others.txt:      A reshaped tab-delimited file, each row represents the proportion of a transcript in a sample, 
+                                                                                only the transcripts with the top 5 (if ≥ 5 transcript are identified in given gene) highest average proportion are displayed, 
+                                                                                the rest transcripts and their correspoding proportion are collapsed into 'Others' item for given gene.
 
-samples_N2_R0_abundance_CPM_target_genes_reshaped_merge_others.txt:                       A reshaped tab-delimited file, each row represents the CPM value of a transcript in a sample, 
-                                                                                          only the transcripts with the top 5 (if ≥ 5 transcript are identified in given gene) highest average proportion are displayed, 
-                                                                                          the rest transcripts and their correspoding CPM valus are collapsed into 'Others' item for given gene.  
+samples_N2_R0_abundance_CPM_target_genes_reshaped_merge_others.txt:             A reshaped tab-delimited file, each row represents the CPM value of a transcript in a sample, 
+                                                                                only the transcripts with the top 5 (if ≥ 5 transcript are identified in given gene) highest average proportion are displayed, 
+                                                                                the rest transcripts and their correspoding CPM valus are collapsed into 'Others' item for given gene.  
 ```
 
 For example, we can use the following commands to visualize (a) transcript isoforms of *TP53* and (b) transcript isoforms of *DNMT3B* that were discovered from TEQUILA-seq data generated on our panel of 40 breast cancer cell lines (2 replicates for each of the 40 breast cancer cell lines):
