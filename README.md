@@ -20,8 +20,6 @@ The scripts contained in this repository were used for processing, analyzing, an
 
 ## Overview
 
-The scripts contained in this repository were used for processing, analyzing, and visualizing TEQUILA-seq data.
-
 <img src="./files/TEQUILA-seq_Analysis_Workflow.png" width="800"/>
 
 Our data processing scripts are designed to work with raw nanopore data (FAST5 format) as input. However, these scripts can work with data from any long-read sequencing platform (e.g., PacBio) as long as the data is provided in FASTQ/SAM/BAM format. These scripts encompass the following steps:
