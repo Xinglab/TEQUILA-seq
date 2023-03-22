@@ -1,0 +1,5 @@
+Group	Number_of_samples
+Basal_B	14
+Basal_A	22
+HER2_Amp	26
+Luminal	18
