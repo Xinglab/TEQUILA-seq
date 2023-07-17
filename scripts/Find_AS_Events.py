@@ -37,7 +37,7 @@ Our script will generate an output file containing the following pieces of infor
     * Gene ID
     * Transcript ID (input transcript)
     * Transcript ID (canonical transcript)
-    * Comma-separated list of genomic coordinates describing alternative splicing event (PTC-containing transcript)
+    * Comma-separated list of genomic coordinates describing alternative splicing event (input transcript)
     * Comma-separated list of genomic coordinates describing alternative splicing event (canonical transcript)
     * Alternative splicing event type
 '''
