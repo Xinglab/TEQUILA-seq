@@ -287,40 +287,56 @@ Finally, tumor aberrant transcript isoforms are identified based on the followin
 
 #### Classification of alternative splicing events underlying discovered transcript isoforms
 
-We wrote a script, [FindAltTSEvents.py](./scripts/FindAltTSEvents.py), that compares the structures of any two transcript isoforms. Local differences in transcript structure are then classified into 7 basic alternative splicing categories:
+We wrote a script, [Find_AS_Events.py](./scripts/Find_AS_Events.py), that is designed to enumerate all alternative splicing events that are associated with a set of transcripts provided as input. This script requires the following two files as input:
+* A GTF file containing genomic coordinates of input transcripts
+* A GTF file of reference gene annotations from GENCODE
+
+For each input transcript, our script will pull out the canonical transcript isoform of the corresponding gene. Local differences in transcript structure between the input transcript and the canonical transcript isoform will be enumerated and classified as one of the following alternative splicing event types (relative to the canonical transcript isoform):
 
 <img src="./files/AS_Patterns_Basic_2018_AJHG.jpg" width="800"/>
 
-* Exon skipping (SE)
-* Alternative 5'-splice site (A5SS)
-* Alternative 3'-splice site (A3SS)
-* Mutually exclusive exons (MXE)
-* Intron retention (RI)
-* Alternative first exon (AFE)
-* Alternative last exon (ALE)
+* Exon skipping
+* Exon inclusion
+* Alternative 5'-splice site
+* Alternative 3'-splice site
+* Mutually exclusive exons
+* Intron retention
+* Exitron splicing
+* Alternative first exon
+* Alternative last exon
 
-Any local differences in transcript structure that could not be classified as one of the 7 basic alternative splicing categories were classified as "complex" (COMPLEX). **Note:** It is possible to have combinations of alternative splicing events for any given pair of transcript isoforms.
+Any local differences in transcript structure that cannot be classified as one of the basic alternative splicing categories described above are classified as "complex". **Note:** It is possible to have combinations of alternative splicing events for a given input transcript. In such cases, each alternative splicing event will be reported individually.
+
+Of note, several edge cases may arise when comparing the structure of a given transcript with the structure of the canonical transcript isoform of the corresponding gene, including:
+* The input transcript is intergenic (no canonical transcript isoform is available to serve as a frame of reference)
+* The input transcript itself is the canonical transcript isoform of the corresponding gene
+* The input transcript does not overlap at all with the canonical transcript isoform
+* The input transcript only differs in transcript ends relative to the canonical transcript isoform
 
 Detailed usage information for our script is shown below:
 
 ```
-python FindAltTSEvents.py [-h] -i /path/to/input/GTF -o /path/to/output/file
+python Find_AS_Events.py [-h] -i /path/to/input/transcripts/GTF -r /path/to/reference/GTF -o /path/to/output/file
 
 script arguments:
     -h, --help                                          show this message and exit
 
-    -i /path/to/input/GTF                               path to GTF file containing annotations for two transcript isoforms
+    -i /path/to/input/transcripts/GTF                   path to GTF file containing genomic coordinates of input transcripts
+
+    -r /path/to/reference/GTF                           path to GTF file containing reference gene annotations from GENCODE
 
     -o /path/to/output/file                             path to output file
 ```
 
-Our script will subsequently generate a tab-delimited file consisting of four fields:
-* **Field 1**: ID for transcript isoform 1
-* **Field 2**: ID for transcript isoform 2
-* **Field 3**: Discovered alternative splicing events
-* **Field 4**: Genomic coordinates for alternative splicing events
-
-**Note:** Designation of transcript isoforms 1 and 2 is completely arbitrary. Moreover, if the two transcript isoforms contained in the input GTF file exhibit a combination of multiple alternative splicing events, each event will be reported as its own line in the output file.
+Our script will subsequently generate a tab-delimited file consisting of the following fields:
+* **Field 1**: Chromosome
+* **Field 2**: Strand
+* **Field 3**: Gene ID
+* **Field 4**: Input transcript ID
+* **Field 5**: Canonical transcript ID
+* **Field 6**: Comma-separated list of genomic coordinates describing alternative splicing event (input transcript)
+* **Field 7**: Comma-separated list of genomic coordinates describing alternative splicing event (canonical transcript)
+* **Field 7**: Alternative splicing event type
 
 
 #### Identification of NMD-targeted transcript isoforms
