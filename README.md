@@ -336,7 +336,7 @@ Our script will subsequently generate a tab-delimited file consisting of the fol
 * **Field 5**: Canonical transcript ID
 * **Field 6**: Comma-separated list of genomic coordinates describing alternative splicing event (input transcript)
 * **Field 7**: Comma-separated list of genomic coordinates describing alternative splicing event (canonical transcript)
-* **Field 7**: Alternative splicing event type
+* **Field 8**: Alternative splicing event type
 
 
 #### Identification of NMD-targeted transcript isoforms
