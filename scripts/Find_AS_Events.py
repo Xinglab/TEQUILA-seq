@@ -344,7 +344,7 @@ def main():
 
     # Parse command-line arguments
     args = parser.parse_args()
-    infile, refAnno, outfile = args.i, args.a, args.r, args.o
+    infile, refAnno, outfile = args.i, args.r, args.o
 
     # Read in infile and refAnno and Pandas dataframes
     outlog('Reading in GTF files for input transcripts and reference gene annotations...')
