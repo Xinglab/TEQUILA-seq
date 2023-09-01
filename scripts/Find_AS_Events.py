@@ -280,6 +280,9 @@ def findASEvents(myExonCoord, annoExonDict, canonDict):
         if row['gene_id'] != 'NA':
             # Split row['gene_id'] by comma and iterate over each gene_id
             for gene_id in row['gene_id'].split(','):
+                if gene_id not in canonDict:
+                    output.append([row['chr'], row['strand'], gene_id, row['transcript_id'], 'NA', 'NA', 'NA', 'no_canonical_transcript'])
+                    continue
                 # Check if the input transcript is the canonical transcript
                 if row['transcript_id'] != canonDict[gene_id]:
                     # Retrieve exon-level coordinates for canonical transcript
