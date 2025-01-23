@@ -2,7 +2,7 @@
 
 '''
 Author: Robert Wang (Xing Lab)
-Date: 2022.03.01
+Date: 2025.01.23
 
 This is a script to enumerate all transcript structure differences 
 between any given pair of transcript isoforms. Alternative transcript 
@@ -24,12 +24,13 @@ transcript structure events for any given pair of transcript isoforms.
 # Load required libraries
 import sys, argparse
 from numpy import sort
-from pandas import DataFrame, read_csv
+from pandas import DataFrame, read_csv, concat
 from networkx import all_simple_paths, get_node_attributes, DiGraph
 
 def ClassifyBubble(bubble, attributes):
     # Extract paths within bubble object
     path1, path2 = bubble
+    coord1, coord2 = [int(item.split('_')[0]) for item in path1], [int(item.split('_')[0]) for item in path2]
 
     # Assign bubble to an event label based on path1, path2, and attributes
     if min(len(path1), len(path2)) == 2 and max(len(path1), len(path2)) == 4:
@@ -43,10 +44,10 @@ def ClassifyBubble(bubble, attributes):
         '''
         if attributes[path1[0]] == 'start' and attributes[path1[-1]] == 'end':
             # Bubble corresponds to intron retention (RI); return coordinates of retained intron
-            return 'RI', ':'.join(list(map(str,sort(list(set(path1).symmetric_difference(set(path2))))+[1,-1])))
+            return 'RI', ':'.join(list(map(str,sort(list(set(coord1).symmetric_difference(set(coord2))))+[1,-1])))
         elif attributes[path1[0]] == 'end' and attributes[path1[-1]] == 'start':
             # Bubble corresponds to exon skipping (SE); return coordinates of skipped exon
-            return 'SE', ':'.join(list(map(str,sort(list(set(path1).symmetric_difference(set(path2)))))))
+            return 'SE', ':'.join(list(map(str,sort(list(set(coord1).symmetric_difference(set(coord2)))))))
         else:
             # Bubble cannot be classified as either SE or RI; default to COMPLEX
             return 'COMPLEX', 'NA'
@@ -60,10 +61,10 @@ def ClassifyBubble(bubble, attributes):
         '''
         if attributes[path1[0]] == 'start' and attributes[path1[-1]] == 'start':
             # Bubble corresponds to an alternative 5'-splice site (A5SS); return coordinates of short and long exons
-            return 'A5SS', ':'.join(list(map(str,sort(path1[:2])))) + ';' + ':'.join(list(map(str,sort(path2[:2]))))
+            return 'A5SS', ':'.join(list(map(str,sort(coord1[:2])))) + ';' + ':'.join(list(map(str,sort(coord2[:2]))))
         elif attributes[path1[0]] == 'end' and attributes[path1[-1]] == 'end':
             # Bubble corresponds to an alternative 3'-splice site (A3SS); return coordinates of short and long exons
-            return 'A3SS', ':'.join(list(map(str,sort(path1[-2:])))) + ';' + ':'.join(list(map(str,sort(path2[-2:]))))
+            return 'A3SS', ':'.join(list(map(str,sort(coord1[-2:])))) + ';' + ':'.join(list(map(str,sort(coord2[-2:]))))
         else:
             # Bubble cannot be classified as either A5SS or A3SS; default to COMPLEX
             return 'COMPLEX', 'NA'
@@ -83,18 +84,19 @@ def ClassifyBubble(bubble, attributes):
             * bubble end node is the sink
             * last exons are not overlapping
         '''
-        if attributes[path1[0]] == 'end' and attributes[path1[-1]] == 'start' and not CheckOverlap(sort(path1[1:3]), sort(path2[1:3])):
+        if attributes[path1[0]] == 'end' and attributes[path1[-1]] == 'start' and not CheckOverlap(sort(coord1[1:3]), sort(coord2[1:3])):
             # Bubble involves mutually exclusive exons; return coordinates of these mutually exclusive exons
-            return 'MXE', ':'.join(list(map(str,sort(path1[1:3])))) + ';' + ':'.join(list(map(str,sort(path2[1:3]))))
-        elif attributes[path1[0]] == 'root' and attributes[path1[-1]] == 'start' and not CheckOverlap(sort(path1[1:3]), sort(path2[1:3])):
+            return 'MXE', ':'.join(list(map(str,sort(coord1[1:3])))) + ';' + ':'.join(list(map(str,sort(coord2[1:3]))))
+        elif attributes[path1[0]] == 'root' and attributes[path1[-1]] == 'start' and not CheckOverlap(sort(coord1[1:3]), sort(coord2[1:3])):
             # Bubble involves an alternative first exon; return coordinates of these first exons
-            return 'AFE', ':'.join(list(map(str,sort(path1[1:3])))) + ';' + ':'.join(list(map(str,sort(path2[1:3]))))
-        elif attributes[path1[0]] == 'end' and attributes[path1[-1]] == 'sink' and not CheckOverlap(sort(path1[1:3]), sort(path2[1:3])):
+            return 'AFE', ':'.join(list(map(str,sort(coord1[1:3])))) + ';' + ':'.join(list(map(str,sort(coord2[1:3]))))
+        elif attributes[path1[0]] == 'end' and attributes[path1[-1]] == 'sink' and not CheckOverlap(sort(coord1[1:3]), sort(coord2[1:3])):
             # Bubble involves an alternative last exon; return coordinates of these last exons
-            return 'ALE', ':'.join(list(map(str,sort(path1[1:3])))) + ';' + ':'.join(list(map(str,sort(path2[1:3]))))
+            return 'ALE', ':'.join(list(map(str,sort(coord1[1:3])))) + ';' + ':'.join(list(map(str,sort(coord2[1:3]))))
         else:
             # Bubble cannot be classified as MXE, AFE, or ALE; default to COMPLEX
             return 'COMPLEX', 'NA'
+
     else:
         # Bubble cannot be classified into a simple event; default to COMPLEX
         return 'COMPLEX', 'NA'
@@ -113,7 +115,6 @@ def FindBubbles(spliceGraph):
         * Else:
             * We have reached the root node; terminate procedure
     '''
-
     # Create an empty list to store all bubbles found in the splice graph
     bubbles = list()
 
@@ -126,18 +127,14 @@ def FindBubbles(spliceGraph):
         if spliceGraph.in_degree(currentNode) == 2:
             # We have reached the end of a bubble; enumerate all simple paths between bubbleStart and currentNode
             bubbles.append(list(all_simple_paths(spliceGraph, source=bubbleStart, target=currentNode)))
-
         if spliceGraph.out_degree(currentNode) == 2:
             # We have reached the beginning of a bubble
             bubbleStart = currentNode
-
             # Select first child of bubbleStart and set it as currentNode
             currentNode = list(spliceGraph.successors(currentNode))[0]
-
         elif spliceGraph.out_degree(currentNode) == 1:
             # Set child to currentNode
             currentNode = list(spliceGraph.successors(currentNode))[0]
-
         else:
             # We have reached the root node; set bubbleStart to currentNode, which is 'root'
             bubbleStart = currentNode
@@ -168,7 +165,7 @@ def CheckOverlap(tuple1, tuple2):
     # Checks if tuple1 overlaps with tuple2
     return max(tuple1[0], tuple2[0]) <= min(tuple1[1], tuple2[1])
 
-def SmoothEnds(inputDF):
+def SmoothEnds(inputDF, strand):
     '''
     Transcript ends cannot be accurately determined using RNA sequencing.
     Differences in transcript start and end points will, however, manifest as
@@ -178,73 +175,73 @@ def SmoothEnds(inputDF):
     this obviates the capacity to detect all bona fide alternative promoter
     or alternative polyadenylation events.
     '''
-
     # Create a copy of inputDF
     copyDF = inputDF.copy()
 
     # Extract coordinates of terminal exons for both transcript isoforms
     firstExon1, firstExon2 = (inputDF['exonStart'].iloc[0][0], inputDF['exonEnd'].iloc[0][0]), (inputDF['exonStart'].iloc[1][0], inputDF['exonEnd'].iloc[1][0])
     lastExon1, lastExon2 = (inputDF['exonStart'].iloc[0][-1], inputDF['exonEnd'].iloc[0][-1]), (inputDF['exonStart'].iloc[1][-1], inputDF['exonEnd'].iloc[1][-1])
-
+    
     # Adjust transcript start positions; if firstExon1 is identical to firstExon2, do nothing
     if firstExon1 != firstExon2:
         # Check if firstExon1 overlaps with firstExon2 (first sort the tuple coordinates)
         # If there's no overlap, then do nothing
-        if CheckOverlap(sort(firstExon1), sort(firstExon2)):
-            # Pick a common start coordinate for both first exons (default to start for firstExon1)
-            copyDF['exonStart'].iloc[1][0] = copyDF['exonStart'].iloc[0][0]
-
+        if CheckOverlap(sort([int(item.split('_')[0]) for item in firstExon1]), sort([int(item.split('_')[0]) for item in firstExon2])):
+            if strand == '+':
+                commonStart = min(int(firstExon1[0].split('_')[0]), int(firstExon2[0].split('_')[0]))
+            else:
+                commonStart = max(int(firstExon1[0].split('_')[0]), int(firstExon2[0].split('_')[0]))
+            copyDF['exonStart'].iloc[0][0], copyDF['exonStart'].iloc[1][0] = str(commonStart) + '_5', str(commonStart) + '_5'
+    
     # Adjust transcript end positions; if lastExon1 is identical to lastExon2, do nothing
     if lastExon1 != lastExon2:
         # Check if lastExon1 overlaps with lastExon2 (first sort the tuple coordinates)
         # If there's no overlap, then do nothing
-        if CheckOverlap(sort(lastExon1), sort(lastExon2)):
-            # Pick a common end coordinate for both last exons (default to end for lastExon1)
-            copyDF['exonEnd'].iloc[1][-1] = copyDF['exonEnd'].iloc[0][-1]
-
+        if CheckOverlap(sort([int(item.split('_')[0]) for item in lastExon1]), sort([int(item.split('_')[0]) for item in lastExon2])):
+            if strand == '+':
+                commonEnd = max(int(lastExon1[1].split('_')[0]), int(lastExon2[1].split('_')[0]))
+            else:
+                commonEnd = min(int(lastExon1[1].split('_')[0]), int(lastExon2[1].split('_')[0]))
+            copyDF['exonEnd'].iloc[0][-1], copyDF['exonEnd'].iloc[1][-1] = str(commonEnd) + '_3', str(commonEnd) + '_3'
+    
     return copyDF
 
 def ParseGTF(infile):
     # Read infile as a pandas dataframe
     gtfDF = read_csv(infile, sep='\t', header=None)
-
+    
     # Pull out transcript annotations in gtfDF
     transcriptDF = gtfDF[gtfDF[2] == 'transcript']
-
+    
     # Double check that the GTF file only has annotations for two transcript isoforms
     if transcriptDF.shape[0] == 2:
         # Isolate transcript IDs for each transcript
         transcriptID = [[x for x in anno.split(';') if 'transcript_id' in x][0].split('\"')[1] for anno in transcriptDF[8]]
-
         # Establish an empty pandas dataframe for output
         inputDF = DataFrame(columns = ['transcript_ID', 'chrom', 'strand', 'exonStart', 'exonEnd'])
-
+        
         # For each transcript in transcriptID, record exon start and end coordinates
         for transcript in transcriptID:
             # Determine strand associated with transcript
             strand = transcriptDF[transcriptDF[8].str.contains(transcript)][6].item()
-
             # Determine chromosome associated with transcript
             chrom = transcriptDF[transcriptDF[8].str.contains(transcript)][0].item()
-            
             # Pull out rows of gtfDF corresponding to exons of given transcript
             exonDF = gtfDF[(gtfDF[2] == 'exon') & (gtfDF[8].str.contains(transcript))]
-
             # Establish sorted lists for exon start and end coordinates based on strand
             if strand == '+':
                 exonStart, exonEnd = sort(exonDF[3]), sort(exonDF[4])
             else:
                 exonStart, exonEnd = -sort(-exonDF[4]), -sort(-exonDF[3])
-            
             # Update inputDF with information about current transcript
-            inputDF = inputDF.append(DataFrame([[transcript, chrom, strand, exonStart.tolist(), exonEnd.tolist()]],
-                columns = ['transcript_ID', 'chrom', 'strand', 'exonStart', 'exonEnd']))
+            exonStart, exonEnd = [str(item) + '_5' for item in exonStart.tolist()], [str(item) + '_3' for item in exonEnd.tolist()]
+            inputDF = concat([inputDF, DataFrame([[transcript, chrom, strand, exonStart, exonEnd]],
+                columns = ['transcript_ID', 'chrom', 'strand', 'exonStart', 'exonEnd'])])
         
         # Smooth out transcript ends if terminal exons of both transcript isoforms are overlapping
-        inputDF = SmoothEnds(inputDF)
-
+        inputDF = SmoothEnds(inputDF, strand)
         return inputDF
-
+    
     else:
         sys.exit('ERROR: Input GTF file does not contain two transcript isoforms!')
 
@@ -285,14 +282,12 @@ def main():
         # For each bubble, identify the underlying event and report coordinates
         # Note: COMPLEX events will not have reported coordinates
         event, coord = ClassifyBubble(bubble, attributes)
-
         # Update coord with chrom and strand information (only if coord is not 'NA')
         if coord != 'NA':
             coord = ';'.join([chrom + ':' + x + ':' + strand for x in coord.split(';')])
-
         # Update outputDF with information about each bubble
-        outputDF = outputDF.append(DataFrame([[inputDF['transcript_ID'].iloc[0], inputDF['transcript_ID'].iloc[1], event, coord]],
-            columns = ['transcript1', 'transcript2', 'event', 'coordinates']))
+        outputDF = concat([outputDF, DataFrame([[inputDF['transcript_ID'].iloc[0], inputDF['transcript_ID'].iloc[1], event, coord]],
+            columns = ['transcript1', 'transcript2', 'event', 'coordinates'])])
     
     # Print contents of outputDF to outfile
     outputDF.to_csv(outfile, sep='\t', index=False)
