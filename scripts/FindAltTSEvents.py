@@ -2,7 +2,7 @@
 
 '''
 Author: Robert Wang (Xing Lab)
-Date: 2025.01.23
+Date: 2025.02.11
 
 This is a script to enumerate all transcript structure differences 
 between any given pair of transcript isoforms. Alternative transcript 
@@ -30,7 +30,8 @@ from networkx import all_simple_paths, get_node_attributes, DiGraph
 def ClassifyBubble(bubble, attributes):
     # Extract paths within bubble object
     path1, path2 = bubble
-    coord1, coord2 = [int(item.split('_')[0]) for item in path1], [int(item.split('_')[0]) for item in path2]
+    coord1 = [int(item.split('_')[0]) if item not in {'root', 'sink'} else item for item in path1]
+    coord2 = [int(item.split('_')[0]) if item not in {'root', 'sink'} else item for item in path2]
 
     # Assign bubble to an event label based on path1, path2, and attributes
     if min(len(path1), len(path2)) == 2 and max(len(path1), len(path2)) == 4:
