@@ -6,6 +6,7 @@ import concurrent.futures
 import pandas as pd
 import pysam
 import matplotlib.pyplot as plt
+from matplotlib import patches as mpatches
 from matplotlib import rcParams
 rcParams['pdf.fonttype'] = 42
 
@@ -56,6 +57,10 @@ def rate_label(r):
 
 def main():
     args=parse_args()
+
+    out_dir_name = os.path.dirname(args.outprefix)
+    if out_dir_name:
+        os.makedirs(out_dir_name, exist_ok=True)
 
     df=pd.read_csv(args.mapping_file,sep="\t",header=None)
     while df.shape[1]<4: df[df.shape[1]]=None
@@ -128,6 +133,11 @@ def main():
     ax[1].set_xticks(range(len(df)))
     ax[1].set_xticklabels(df['sample'],rotation=45,ha='right')
 
+    fig.legend(handles=[mpatches.Patch(color='#FFD676', label='Mapped')]
+                        + [mpatches.Patch(color='#C4C4C4', label='Unmapped')],
+                        loc='center left', bbox_to_anchor=(1.01, 0.5)
+    )
+
     if args.title: fig.suptitle(args.title)
     plt.tight_layout()
     out1=f"{args.outprefix}_mapping.pdf"
@@ -157,6 +167,15 @@ def main():
     ax[1].set_ylabel("Read Count (M)")
     ax[1].set_xticks(range(len(df)))
     ax[1].set_xticklabels(df['sample'],rotation=45,ha='right')
+
+    fig.legend(
+        handles = ([mpatches.Patch(color=color_dict[g], label=f'On-target: {g}') for g in df['group'].dropna().unique()]
+                if len(df['group'].dropna().unique()) > 0
+                else [mpatches.Patch(color='#6997B9', label='On-target')]) \
+                + [mpatches.Patch(color='#C4C4C4', label='Off-target')],
+        loc='center left',
+        bbox_to_anchor=(1.01, 0.5)
+    )
 
     if args.title: fig.suptitle(args.title)
     plt.tight_layout()
