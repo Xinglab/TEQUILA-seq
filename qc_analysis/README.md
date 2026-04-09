@@ -27,6 +27,7 @@ Example input files are available at: https://xinglabtrackhub.research.chop.edu/
 * `target.bed`
 
 The files are based on data from:
+
 DeBruyne N, Wang F, Xu Y, Lin L. Evaluating the potential and limitations of nanopore adaptive sampling for targeted transcriptome sequencing. Genome Biol. 2025 Oct 9;26(1):349. doi: 10.1186/s13059-025-03813-1. PMID: 41068925; PMCID: PMC12509409.
 
 ### plot_read_attributes.py
