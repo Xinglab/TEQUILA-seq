@@ -30,6 +30,28 @@ The files are based on data from:
 
 DeBruyne N, Wang F, Xu Y, Lin L. Evaluating the potential and limitations of nanopore adaptive sampling for targeted transcriptome sequencing. Genome Biol. 2025 Oct 9;26(1):349. doi: 10.1186/s13059-025-03813-1. PMID: 41068925; PMCID: PMC12509409.
 
+The `.bam` files were created using minimap2 v2.25. The minimap2 package includes paftools.js which can be used to create a `.bed` input annotation file. GENCODE v44 primary assembly files were used as input
+
+Prepare the reference files:
+```
+curl -L 'https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/gencode.v44.primary_assembly.annotation.gtf.gz' -O
+curl -L 'https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/GRCh38.primary_assembly.genome.fa.gz' -O
+gunzip gencode.v44.primary_assembly.annotation.gtf.gz
+gunzip GRCh38.primary_assembly.genome.fa.gz
+paftools.js gff2bed gencode.v44.primary_assembly.annotation.gtf > gencode.v44.primary_assembly.annotation.bed
+```
+
+Align with minimap2 (about 6 minutes and 22GB of memory):
+```
+minimap2 -ax splice -ub --secondary=no -t 8 -k 14 -w 4 --junc-bed gencode.v44.primary_assembly.annotation.bed GRCh38.primary_assembly.genome.fa SY5Y_TEQUILA.fastq.gz > SY5Y_TEQUILA.sam
+```
+
+Convert the `.sam` to a sorted and indexed `.bam`:
+```
+samtools sort -o SY5Y_TEQUILA.bam SY5Y_TEQUILA.sam
+samtools index SY5Y_TEQUILA.bam
+```
+
 ### plot_read_attributes.py
 
 In order to run `plot_read_attributes.py`, create a file `./attributes_in.tsv` with no header and one row for each sample where the columns are:
