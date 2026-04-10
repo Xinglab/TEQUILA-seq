@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import os
 import gzip
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from Bio.SeqIO.QualityIO import FastqGeneralIterator
@@ -122,6 +123,10 @@ def main():
     """ Main function """
 
     args = parse_args()
+
+    out_dir_name = os.path.dirname(args.outprefix)
+    if out_dir_name:
+        os.makedirs(out_dir_name, exist_ok=True)
 
     df_mapping = pd.read_csv(args.mapping_file, sep="\t", header=None)
     if df_mapping.shape[1] == 3:
